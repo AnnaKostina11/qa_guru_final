@@ -17,24 +17,17 @@ class CartPage(BasePage):
     finish_button = s('[data-test="finish"]')
     complete_header = s('[data-test="complete-header"]')
 
-    @allure.step("Перейти к оформлению (ожидание шага Your Information)")
-    def click_checkout_button(self) -> "CartPage":
-        self.checkout_button.should(be.clickable).click()
-
-        # Ключевой момент: убедиться, что реально открылась форма
-        self.title.should(have.text("Checkout: Your Information"))
-        self.first_name_field.should(be.visible)
-
-        return self
-
     @allure.step("Проверка страницы корзины")
     def should_be_opened(self) -> "CartPage":
         self.title.should(have.text("Your Cart"))
         return self
 
-    @allure.step("Перейти к оформлению")
+    @allure.step("Перейти к оформлению (шаг Your Information)")
     def click_checkout_button(self) -> "CartPage":
         self.checkout_button.should(be.clickable).click()
+        # важно: дожидаемся именно шага 1
+        self.title.should(have.text("Checkout: Your Information"))
+        self.first_name_field.should(be.visible)
         return self
 
     @allure.step("Ввод имени: {value}")
