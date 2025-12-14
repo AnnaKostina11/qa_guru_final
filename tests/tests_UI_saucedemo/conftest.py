@@ -39,9 +39,9 @@ def setup_browser(request):
         },
         "goog:loggingPrefs": {"browser": "ALL"}
     }
-    login = os.getenv('S_LOGIN')
-    password = os.getenv('S_PASSWORD')
-    url = os.getenv('S_URL')
+    login = os.getenv('SAUCEDEMO_LOGIN')
+    password = os.getenv('SAUCEDEMO_PASSWORD')
+    url = os.getenv('SAUCEDEMO_URL')
     options.capabilities.update(selenoid_capabilities)
     driver = webdriver.Remote(
         command_executor=f"https://{login}:{password}@{url}",
