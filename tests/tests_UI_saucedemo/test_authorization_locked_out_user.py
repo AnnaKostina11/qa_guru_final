@@ -1,11 +1,15 @@
 import os
 import allure
-
+from allure_commons.types import Severity
 from pages.authorization_page import AuthorizationPage
 
 
-@allure.tag("UI")
-@allure.suite("Authorization")
+@allure.severity(Severity.CRITICAL)
+@allure.title("Авторизация")
+@allure.suite("Негативные тесты")
+@allure.tag("UI", "REGRESS")
+@allure.suite("All Items")
+@allure.parent_suite("UI")
 def test_authorization_locked_out_user():
     AuthorizationPage() \
         .open_authorization_page() \

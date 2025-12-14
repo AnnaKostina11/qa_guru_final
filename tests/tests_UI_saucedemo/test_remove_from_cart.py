@@ -5,11 +5,11 @@ from allure_commons.types import Severity
 from pages.authorization_page import AuthorizationPage
 from pages.inventory_page import InventoryPage
 
-
-@allure.title("Удаление товара из корзины")
 @allure.severity(Severity.CRITICAL)
+@allure.title("Удаление товара из корзины")
+@allure.suite("Позитивные тесты")
 @allure.tag("UI", "REGRESS")
-@allure.suite("Shopping Cart")
+@allure.suite("All Items")
 @allure.parent_suite("UI")
 class TestShoppingCart:
     def test_remove_from_cart(self, browser_setup):
