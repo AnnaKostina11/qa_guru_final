@@ -22,6 +22,16 @@ def pytest_addoption(parser):
 def load_env():
     load_dotenv()
 
+@pytest.fixture(scope="class")
+def log_in_saucedemo(browser_setup):
+    from pages.authorization_page import AuthorizationPage
+
+    auth = AuthorizationPage(browser)
+    auth.open_authorization_page()
+    auth.fill_username(os.getenv('SAUCEDEMO_LOGIN'))
+    auth.fill_password(os.getenv('SAUCEDEMO_PASSWORD'))
+    auth.submit()
+
 
 @pytest.fixture(scope='function', autouse=True)
 def setup_browser(request):
