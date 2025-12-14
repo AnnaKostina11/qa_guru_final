@@ -1,5 +1,16 @@
+import os
+import allure
+from allure_commons.types import Severity
+from pages.authorization_page import AuthorizationPage
+from pages.inventory_page import InventoryPage
 from pages.cart_page import CartPage
 
+
+@allure.title("Оформление заказа")
+@allure.severity(Severity.CRITICAL)
+@allure.tag("UI", "REGRESS")
+@allure.suite("Позитивные тесты")
+@allure.parent_suite("Тесты UI")
 def test_buy_to_product(browser_setup):
     AuthorizationPage() \
         .open_authorization_page() \
