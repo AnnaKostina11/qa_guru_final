@@ -10,7 +10,7 @@ from pages.authorization_page import AuthorizationPage
 @allure.tag("UI", "REGRESS")
 @allure.suite("All Items")
 @allure.parent_suite("UI")
-def test_logout(self, browser_setup):
+def test_logout(browser_setup):
     auth_page = AuthorizationPage() \
         .open_authorization_page() \
         .fill_username(os.getenv("SAUCEDEMO_LOGIN")) \

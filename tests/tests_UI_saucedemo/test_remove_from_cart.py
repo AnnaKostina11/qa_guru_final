@@ -11,7 +11,7 @@ from pages.inventory_page import InventoryPage
 @allure.tag("UI", "REGRESS")
 @allure.suite("All Items")
 @allure.parent_suite("UI")
-def test_remove_from_cart(self, browser_setup):
+def test_remove_from_cart(browser_setup):
     # Логин
     AuthorizationPage() \
         .open_authorization_page() \
