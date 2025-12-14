@@ -1,6 +1,5 @@
 import os
 import pytest
-import time
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selene import browser  # ✅ Только browser
@@ -16,6 +15,16 @@ selenoid_url = os.getenv("SELENOID_URL")
 s_user = os.getenv("SAUCEDEMO_LOGIN")
 s_password = os.getenv("SAUCEDEMO_PASSWORD")
 s_url = os.getenv("SAUCEDEMO_URL")
+
+
+def pytest_addoption(parser):
+    """Добавляем опцию browser_version для pytest"""
+    parser.addoption(
+        '--browser_version',
+        action='store',
+        default=DEFAULT_BROWSER_VERSION,
+        help='Browser version for Selenoid (default: 128.0)'
+    )
 
 
 @pytest.fixture(scope='session', autouse=True)
@@ -36,7 +45,7 @@ def browser_setup(request):
 
     options = webdriver.ChromeOptions()
 
-    # ✅ Только Selenoid - удалена проверка переменных
+    # ✅ Только Selenoid
     selenoid_capabilities = {
         "browserName": "chrome",
         "browserVersion": browser_version,
