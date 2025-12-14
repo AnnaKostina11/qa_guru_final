@@ -4,7 +4,7 @@ from pages.authorization_page import AuthorizationPage
 from pages.inventory_page import InventoryPage
 import allure
 from allure_commons.types import Severity
-from pages.home_page import HomePage
+from pages.inventory_page import InventoryPage
 
 
 @allure.severity(Severity.CRITICAL)
@@ -19,10 +19,8 @@ def test_add_to_shopping_cart(browser_setup):
         .fill_password(os.getenv("SAUCEDEMO_PASSWORD")) \
         .submit()
 
-    InventoryPage().should_be_opened()
-    home_page = HomePage()
+    inventory = InventoryPage().should_be_opened()
+    inventory.add_product_to_shopping_cart_by_text("Sauce Labs Backpack")
+    inventory.add_product_to_shopping_cart_by_text("Sauce Labs Bolt T-Shirt")
+    inventory.verify_cart_badge_text("2")
 
-    home_page.add_product_to_shopping_cart_by_text("Sauce Labs Backpack")
-    home_page.add_product_to_shopping_cart_by_text("Sauce Labs Bolt T-Shirt")
-
-    home_page.verify_cart_badge_text("2")
