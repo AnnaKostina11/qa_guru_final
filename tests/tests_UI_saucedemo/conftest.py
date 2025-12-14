@@ -32,6 +32,16 @@ def log_in_saucedemo(browser_setup):
     auth.fill_password(os.getenv('SAUCEDEMO_PASSWORD'))
     auth.submit()
 
+@pytest.fixture(scope="class")
+def log_in_saucedemo_fail(browser_setup):
+    from pages.authorization_page import AuthorizationPage
+
+    auth = AuthorizationPage(browser)
+    auth.open_authorization_page()
+    auth.fill_username(os.getenv('SAUCEDEMO_LOGIN_FAILED'))
+    auth.fill_password(os.getenv('SAUCEDEMO_PASSWORD'))
+    auth.submit()
+
 
 @pytest.fixture(scope='function', autouse=True)
 def browser_setup(request):
