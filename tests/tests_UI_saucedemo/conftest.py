@@ -14,6 +14,7 @@ selenoid_pass = os.getenv("SELENOID_PASS")
 selenoid_url = os.getenv("SELENOID_URL")
 s_user=os.getenv("SAUCEDEMO_LOGIN")
 s_password=os.getenv("SAUCEDEMO_PASSWORD")
+s_url=os.getenv("SAUCEDEMO_URL")
 
 
 def pytest_addoption(parser):
@@ -48,12 +49,12 @@ def browser_setup(request):
 
     # ✅ ✅ КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: base_url как CALLABLE
     def open_base_url(path: str = "/") -> None:
-        browser.open(selenoid_url.rstrip('/') + path)
+        browser.open(s_url.rstrip('/') + path)
 
     browser.config.base_url = open_base_url  # ← CALLABLE!
 
     # Определяем remote/local
-    is_remote = bool(os.getenv('SELENOID_URL')) or request.config.getoption('remote')
+    is_remote = bool(os.getenv('SAUCEDEMO_URL')) or request.config.getoption('remote')
 
     options = Options()
 
