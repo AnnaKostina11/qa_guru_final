@@ -10,17 +10,16 @@ from pages.authorization_page import AuthorizationPage
 @allure.tag("UI", "REGRESS")
 @allure.suite("All Items")
 @allure.parent_suite("UI")
-class TestAuthorization:
-    def test_logout(self, browser_setup):
-        auth_page = AuthorizationPage() \
-            .open_authorization_page() \
-            .fill_username(os.getenv("SAUCEDEMO_LOGIN")) \
-            .fill_password(os.getenv("SAUCEDEMO_PASSWORD")) \
-            .submit()
+def test_logout(self, browser_setup):
+    auth_page = AuthorizationPage() \
+        .open_authorization_page() \
+        .fill_username(os.getenv("SAUCEDEMO_LOGIN")) \
+        .fill_password(os.getenv("SAUCEDEMO_PASSWORD")) \
+        .submit()
 
-        # logout доступен из BasePage, поэтому можно вызвать прямо отсюда
-        auth_page.logout()
+    # logout доступен из BasePage, поэтому можно вызвать прямо отсюда
+    auth_page.logout()
 
-        auth_page.verify_url()
-        auth_page.verify_page_title()
-        auth_page.verify_login_logo()
+    auth_page.verify_url()
+    auth_page.verify_page_title()
+    auth_page.verify_login_logo()
