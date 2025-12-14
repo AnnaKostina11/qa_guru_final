@@ -12,8 +12,8 @@ import config
 @allure.suite("Authorization")
 @allure.parent_suite("UI")
 class TestAuthorization:
-    def test_logout(self, manage_browser):
-        browser = manage_browser
+    def test_logout(self, browser_setup):
+        browser = browser_setup
         """
         Проверяет корректный выход из аккаунта
         Ожидается: возврат на страницу авторизации

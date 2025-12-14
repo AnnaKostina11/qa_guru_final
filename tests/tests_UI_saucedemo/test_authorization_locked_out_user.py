@@ -10,8 +10,8 @@ from pages.home_page import HomePage
 @allure.tag("UI", "REGRESS")
 @allure.suite("Authorization")
 @allure.parent_suite("UI")
-def test_authorization_locked_out_user(manage_browser):
-    browser = manage_browser
+def test_authorization_locked_out_user(browser_setup):
+    browser = browser_setup
     auth_page = AuthorizationPage(browser)
 
     auth_page.open_authorization_page()

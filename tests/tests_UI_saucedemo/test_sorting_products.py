@@ -13,8 +13,8 @@ import config
 @allure.parent_suite("UI")
 class TestSortingProducts:
 
-    def test_sorting_products(self, manage_browser):
-        browser = manage_browser
+    def test_sorting_products(self, browser_setup):
+        browser = browser_setup
         # Логин
         auth_page = AuthorizationPage(browser)
         auth_page.open_authorization_page()

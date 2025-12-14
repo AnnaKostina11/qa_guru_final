@@ -8,8 +8,8 @@ from pages.home_page import HomePage
 @allure.tag("UI", "REGRESS")
 @allure.suite("All Items")
 @allure.parent_suite("UI")
-def test_add_to_shopping_cart(manage_browser, log_in_saucedemo):
-    browser = manage_browser
+def test_add_to_shopping_cart(browser_setup, log_in_saucedemo):
+    browser = browser_setup
     home_page = HomePage(browser)
 
     home_page.add_product_to_shopping_cart_by_text("Sauce Labs Backpack")
