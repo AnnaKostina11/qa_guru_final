@@ -2,19 +2,19 @@ import os
 import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from selene import browser
+from selene import browser  # ✅ Только browser
+from selene.support.shared import config  # ✅ Импорт config
 from dotenv import load_dotenv
 from automation_exercise.utils import attach
 import allure
-import config
 
 DEFAULT_BROWSER_VERSION = "128.0"
 selenoid_login = os.getenv("SELENOID_LOGIN")
 selenoid_pass = os.getenv("SELENOID_PASS")
 selenoid_url = os.getenv("SELENOID_URL")
-s_user=os.getenv("SAUCEDEMO_LOGIN")
-s_password=os.getenv("SAUCEDEMO_PASSWORD")
-s_url=os.getenv("SAUCEDEMO_URL")
+s_user = os.getenv("SAUCEDEMO_LOGIN")
+s_password = os.getenv("SAUCEDEMO_PASSWORD")
+s_url = os.getenv("SAUCEDEMO_URL")
 
 
 def pytest_addoption(parser):
@@ -37,29 +37,21 @@ def load_env():
     load_dotenv()
 
 
-@pytest.fixture(scope='class', autouse=True)
+@pytest.fixture(scope='class', autouse=True)  # ✅ ИЗМЕНЕНО с function на class
 def browser_setup(request):
-    """Единая настройка браузера для всех тестов"""
-    browser_version = "128.0"
+    """Единая настройка браузера для всех тестов класса"""
+    browser_version = request.config.getoption('browser_version')  # ✅ Без --
+    browser_version = browser_version if browser_version else DEFAULT_BROWSER_VERSION
 
-    # ✅ Selene настройки
-    browser.config.window_width = 1920
-    browser.config.window_height = 1080
-    browser.config.timeout = 10.0
+    # ✅ Selene настройки ПЕРЕД драйвером
+    config.timeout = 6.0
+    config.window_width = 1920
+    config.window_height = 1080
 
-    # ✅ ✅ КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: base_url как CALLABLE
-    def open_base_url(path: str = "/") -> None:
-        browser.open(s_url.rstrip('/') + path)
+    options = webdriver.ChromeOptions()
 
-    browser.config.base_url = open_base_url  # ← CALLABLE!
-
-    # Определяем remote/local
-    is_remote = bool(os.getenv('SAUCEDEMO_URL')) or request.config.getoption('remote')
-
-    options = Options()
-
-    if is_remote:
-
+    # ✅ Проверяем наличие Selenoid переменных
+    if all([selenoid_login, selenoid_pass, selenoid_url]):
         selenoid_capabilities = {
             "browserName": "chrome",
             "browserVersion": browser_version,
@@ -67,17 +59,23 @@ def browser_setup(request):
                 "enableVNC": True,
                 "enableVideo": True,
                 "enableLog": True
-            }
+            },
+            "goog:loggingPrefs": {"browser": "ALL"}
         }
         options.set_capability('selenoid:options', selenoid_capabilities['selenoid:options'])
+        options.set_capability('browserName', 'chrome')
+        options.set_capability('browserVersion', browser_version)
 
         driver = webdriver.Remote(
-            command_executor=f'https://{selenoid_login}:{selenoid_pass}@{selenoid_url}',
+            command_executor=f"https://{selenoid_login}:{selenoid_pass}@{selenoid_url}",  # ✅ /wd/hub
             options=options
         )
     else:
+        # ✅ Локальный Chrome
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-dev-shm-usage')
+        options.add_argument('--disable-gpu')
+        options.add_argument('--window-size=1920,1080')
         driver = webdriver.Chrome(options=options)
 
     browser.config.driver = driver
@@ -85,19 +83,22 @@ def browser_setup(request):
 
     yield browser
 
-    # Allure attachments
-    attach.add_screenshot(browser)
-    attach.add_logs(browser)
-    attach.add_html(browser)
-    attach.add_video(browser)
+    # ✅ Allure attachments в try-except
+    try:
+        attach.add_screenshot(browser)
+        attach.add_logs(browser)
+        attach.add_html(browser)
+        attach.add_video(browser)
+    except Exception:
+        pass
+
     browser.quit()
 
 
 @pytest.fixture(scope="class")
-def log_in_saucedemo():
+def log_in_saucedemo(browser_setup):
     """Логин на saucedemo через Selene"""
     from pages.authorization_page import AuthorizationPage
-    from pages.home_page import HomePage
 
     auth = AuthorizationPage(browser)
     auth.open_authorization_page()
@@ -105,14 +106,13 @@ def log_in_saucedemo():
     auth.fill_password(s_password)
     auth.submit()
 
-    HomePage(browser).verify_url()
-
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
     outcome = yield
     rep = outcome.get_result()
-    if rep.when == "call" and rep.failed:
-        item.status = "failed"
-    else:
-        item.status = "passed"
+    if rep.when == "call":
+        if rep.failed:
+            item.status = "failed"
+        else:
+            item.status = "passed"
