@@ -34,7 +34,7 @@ def log_in_saucedemo(browser_setup):
 
 
 @pytest.fixture(scope='function', autouse=True)
-def setup_browser(request):
+def browser_setup(request):
     browser_version = DEFAULT_BROWSER_VERSION
     options = webdriver.ChromeOptions()
     selenoid_capabilities = {
