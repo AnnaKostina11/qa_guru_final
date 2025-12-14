@@ -1,68 +1,55 @@
+import os
 import allure
-from selenium.webdriver.common.by import By
+from selene import browser, have, be
+from selene.support.shared.jquery_style import s
 
 from pages.base_page import BasePage
 
 
 class AuthorizationPage(BasePage):
-    LOGIN_LOGO = By.CSS_SELECTOR, ".login_logo"
-    USERNAME_FIELD = By.CSS_SELECTOR, "#user-name"
-    PASSWORD_FIELD = By.CSS_SELECTOR, "#password"
-    LOGIN_BUTTON = By.CSS_SELECTOR, "#login-button"
-    ERROR_MESSAGE_CONTAINER = By.CSS_SELECTOR, ".error-message-container"
-    ERROR_MESSAGE = By.CSS_SELECTOR, ".error-message-container h3"
+    login_logo = s(".login_logo")
+    username_field = s("#user-name")
+    password_field = s("#password")
+    login_button = s("#login-button")
+    error_container = s(".error-message-container")
+    error_message = s(".error-message-container h3")
 
-    # ACTIONS
     @allure.step("Открытие страницы авторизации")
-    def open_authorization_page(self) -> None:
+    def open_authorization_page(self) -> "AuthorizationPage":
         self.open_page("/")
+        return self
 
-    @allure.step("Ввод имени {value}")
-    def fill_username(self, value: str) -> None:
-        self.type_text_into_element(self.USERNAME_FIELD, value)
+    @allure.step("Ввод имени: {value}")
+    def fill_username(self, value: str) -> "AuthorizationPage":
+        self.type(self.username_field, value)
+        return self
 
-    def fill_password(self, value: str) -> None:
-        with allure.step("Ввод пароля"):
-            self.type_text_into_element(self.PASSWORD_FIELD, value)
+    @allure.step("Ввод пароля")
+    def fill_password(self, value: str) -> "AuthorizationPage":
+        self.type(self.password_field, value)
+        return self
 
-    @allure.step("Нажатие кнопки подтверждения")
-    def submit(self) -> None:
-        self.click_on_element(self.LOGIN_BUTTON)
+    @allure.step("Нажатие кнопки логина")
+    def submit(self) -> "AuthorizationPage":
+        self.click(self.login_button)
+        return self
 
-    # VERIFICATIONS
     @allure.step("Проверка title страницы")
-    def verify_page_title(self) -> None:
-        self.assert_that_page_have_title("Swag Labs")
-
-    @allure.step("Проверка логотипа")
-    def verify_login_logo(self) -> None:
-        self.assert_that_element_is_visible(self.LOGIN_LOGO)
-
-    @allure.step("Проверка наличия поля username")
-    def verify_username_field(self) -> None:
-        self.assert_that_element_is_visible(self.USERNAME_FIELD)
-
-    @allure.step("Проверка наличия поля password")
-    def verify_password_field(self) -> None:
-        self.assert_that_element_is_visible(self.PASSWORD_FIELD)
-
-    @allure.step("Проверка наличия кнопки подтверждения")
-    def verify_login_button(self) -> None:
-        self.assert_that_element_is_visible(self.LOGIN_BUTTON)
+    def verify_page_title(self) -> "AuthorizationPage":
+        browser.should(have.title("Swag Labs"))
+        return self
 
     @allure.step("Проверка URL страницы авторизации")
     def verify_url(self) -> "AuthorizationPage":
-        assert self.browser.current_url == "https://www.saucedemo.com/", "URL не соответствует странице авторизации"
+        browser.should(have.url(f"{os.getenv('SAUCEDEMO_URL', 'https://www.saucedemo.com')}/"))
         return self
 
     @allure.step("Проверка сообщения об ошибке заблокированного пользователя")
     def verify_locked_out_error_message(self) -> "AuthorizationPage":
-        error_message = self.browser.find_element(*self.ERROR_MESSAGE).text
-        expected_message = "Epic sadface: Sorry, this user has been locked out."
-        assert expected_message in error_message, f"Ожидалось: '{expected_message}', получено: '{error_message}'"
+        self.error_message.should(have.text("Epic sadface: Sorry, this user has been locked out."))
         return self
 
     @allure.step("Проверка видимости сообщения об ошибке")
     def verify_error_message_visible(self) -> "AuthorizationPage":
-        self.assert_that_element_is_visible(self.ERROR_MESSAGE_CONTAINER)
+        self.error_container.should(be.visible)
         return self
