@@ -1,6 +1,6 @@
 import allure
 from allure_commons.types import Severity
-
+import os
 from pages.authorization_page import AuthorizationPage
 from pages.home_page import HomePage
 
@@ -15,8 +15,8 @@ def test_authorization_locked_out_user(browser_setup):
     auth_page = AuthorizationPage(browser)
 
     auth_page.open_authorization_page()
-    auth_page.fill_username("locked_out_user")
-    auth_page.fill_password("secret_sauce")
+    auth_page.fill_username(os.getenv("SAUCEDEMO_LOGIN_FAIL"))
+    auth_page.fill_password(os.getenv("SAUCEDEMO_PASSWORD"))
     auth_page.submit()
 
     # Проверяем, что остался на странице авторизации

@@ -12,10 +12,10 @@ from pages.home_page import HomePage
 @allure.suite('user_authorization')
 def test_authorization(browser_setup):
     browser = browser_setup
-    auth = AuthorizationPage(browser)
-    home = HomePage(browser)
-    auth.open_authorization_page()
-    auth.fill_username(config.SAUCEDEMO_LOGIN)
-    auth.fill_password(config.SAUCEDEMO_PASSWORD)
-    auth.submit()
-    home.verify_url()
+    home_page = HomePage(browser)
+    auth_page = AuthorizationPage(browser)
+    auth_page.open_authorization_page()
+    auth_page.fill_username(os.getenv("SAUCEDEMO_LOGIN"))
+    auth_page.fill_password(os.getenv("SAUCEDEMO_PASSWORD"))
+    auth_page.submit()
+    home_page.verify_url()

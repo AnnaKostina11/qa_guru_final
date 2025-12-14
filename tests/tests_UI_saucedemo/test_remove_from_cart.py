@@ -1,6 +1,6 @@
 import allure
 from allure_commons.types import Severity
-
+import os
 from pages.home_page import HomePage
 from pages.authorization_page import AuthorizationPage
 import config
@@ -17,8 +17,8 @@ class TestShoppingCart:
         # Логин
         auth_page = AuthorizationPage(browser)
         auth_page.open_authorization_page()
-        auth_page.fill_username(config.SAUCEDEMO_LOGIN)
-        auth_page.fill_password(config.SAUCEDEMO_PASSWORD)
+        auth_page.fill_username(os.getenv("SAUCEDEMO_LOGIN"))
+        auth_page.fill_password(os.getenv("SAUCEDEMO_PASSWORD"))
         auth_page.submit()
 
         home_page = HomePage(browser)

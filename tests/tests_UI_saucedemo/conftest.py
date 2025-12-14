@@ -99,7 +99,7 @@ def log_in_saucedemo():
     from pages.home_page import HomePage
 
     auth = AuthorizationPage(browser)
-    auth.open_authorization_page()  # ✅ Теперь работает!
+    auth.open_authorization_page()
     auth.fill_username(s_user)
     auth.fill_password(s_password)
     auth.submit()
