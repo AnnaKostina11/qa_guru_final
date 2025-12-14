@@ -9,7 +9,11 @@ import allure
 import config
 
 DEFAULT_BROWSER_VERSION = "128.0"
-BASE_URL = os.getenv('BASE_URL', 'https://www.saucedemo.com')
+selenoid_login = os.getenv("SELENOID_LOGIN")
+selenoid_pass = os.getenv("SELENOID_PASS")
+selenoid_url = os.getenv("SELENOID_URL")
+s_user=os.getenv("SAUCEDEMO_LOGIN")
+s_password=os.getenv("SAUCEDEMO_PASSWORD")
 
 
 def pytest_addoption(parser):
@@ -44,7 +48,7 @@ def browser_setup(request):
 
     # ✅ ✅ КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: base_url как CALLABLE
     def open_base_url(path: str = "/") -> None:
-        browser.open(BASE_URL.rstrip('/') + path)
+        browser.open(selenoid_url.rstrip('/') + path)
 
     browser.config.base_url = open_base_url  # ← CALLABLE!
 
@@ -54,9 +58,6 @@ def browser_setup(request):
     options = Options()
 
     if is_remote:
-        selenoid_login = os.getenv("SELENOID_LOGIN")
-        selenoid_pass = os.getenv("SELENOID_PASS")
-        selenoid_url = os.getenv("SELENOID_URL")
 
         selenoid_capabilities = {
             "browserName": "chrome",
@@ -99,8 +100,8 @@ def log_in_saucedemo():
 
     auth = AuthorizationPage(browser)
     auth.open_authorization_page()  # ✅ Теперь работает!
-    auth.fill_username(config.SAUCEDEMO_LOGIN)
-    auth.fill_password(config.SAUCEDEMO_PASSWORD)
+    auth.fill_username(s_user)
+    auth.fill_password(s_password)
     auth.submit()
 
     HomePage(browser).verify_url()

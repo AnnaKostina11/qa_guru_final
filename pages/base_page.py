@@ -1,4 +1,5 @@
 import logging
+import os
 import config
 from selenium.common import TimeoutException
 from selenium.webdriver import ActionChains
@@ -10,7 +11,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 class BasePage:
     def __init__(self, browser: WebDriver) -> None:
         self.browser = browser
-        self.base_url = config.SAUCEDEMO_URL
+        self.base_url = os.getenv("SAUCEDEMO_URL")
         self.__config_logger()
 
     # CONFIG LOGGER
