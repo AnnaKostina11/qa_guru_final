@@ -1,15 +1,25 @@
+import os
+import allure
+from pages.authorization_page import AuthorizationPage
+from pages.inventory_page import InventoryPage
 import allure
 from allure_commons.types import Severity
-
 from pages.home_page import HomePage
 
 
-@allure.title("Добавление в корзину")
 @allure.severity(Severity.CRITICAL)
+@allure.title("Добавление в корзину")
 @allure.tag("UI", "REGRESS")
 @allure.suite("All Items")
 @allure.parent_suite("UI")
-def test_add_to_shopping_cart(browser_setup, log_in_saucedemo):
+def test_add_to_shopping_cart(browser_setup):
+    AuthorizationPage() \
+        .open_authorization_page() \
+        .fill_username(os.getenv("SAUCEDEMO_LOGIN")) \
+        .fill_password(os.getenv("SAUCEDEMO_PASSWORD")) \
+        .submit()
+
+    InventoryPage().should_be_opened()
     home_page = HomePage()
 
     home_page.add_product_to_shopping_cart_by_text("Sauce Labs Backpack")
