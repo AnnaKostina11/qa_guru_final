@@ -70,7 +70,7 @@ def browser_setup(request):
         options.set_capability('selenoid:options', selenoid_capabilities['selenoid:options'])
 
         driver = webdriver.Remote(
-            command_executor=f'https://{selenoid_login}:{selenoid_pass}@{selenoid_url}/wd/hub',
+            command_executor=f'https://{selenoid_login}:{selenoid_pass}@{selenoid_url}',
             options=options
         )
     else:
