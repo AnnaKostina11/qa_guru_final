@@ -54,9 +54,9 @@ def browser_setup(request):
     options = Options()
 
     if is_remote:
-        login = os.getenv('SELENOID_LOGIN', 'admin')
-        password = os.getenv('SELENOID_PASSWORD', 'admin')
-        url = os.getenv('SELENOID_URL', 'selenoid.default.svc.cluster.local')
+        selenoid_login = os.getenv("SELENOID_LOGIN")
+        selenoid_pass = os.getenv("SELENOID_PASS")
+        selenoid_url = os.getenv("SELENOID_URL")
 
         selenoid_capabilities = {
             "browserName": "chrome",
@@ -70,7 +70,7 @@ def browser_setup(request):
         options.set_capability('selenoid:options', selenoid_capabilities['selenoid:options'])
 
         driver = webdriver.Remote(
-            command_executor=f'https://{login}:{password}@{url}/wd/hub',
+            command_executor=f'https://{selenoid_login}:{selenoid_pass}@{selenoid_url}/wd/hub',
             options=options
         )
     else:
