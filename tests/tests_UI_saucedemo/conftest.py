@@ -35,7 +35,7 @@ def load_env():
 @pytest.fixture(scope='class', autouse=True)
 def browser_setup(request):
     """Единая настройка браузера для всех тестов"""
-    browser_version = request.config.getoption('--browser_version') or DEFAULT_BROWSER_VERSION
+    browser_version = "128.0"
 
     # ✅ Selene настройки
     browser.config.window_width = 1920
