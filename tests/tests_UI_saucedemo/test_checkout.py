@@ -5,12 +5,12 @@ from pages.authorization_page import AuthorizationPage
 from pages.inventory_page import InventoryPage
 from pages.cart_page import CartPage
 
-
-@allure.title("Оформление заказа")
 @allure.severity(Severity.CRITICAL)
-@allure.tag("UI", "REGRESS")
+@allure.title("Оформление заказа")
 @allure.suite("Позитивные тесты")
-@allure.parent_suite("Тесты UI")
+@allure.tag("UI", "REGRESS")
+@allure.suite("All Items")
+@allure.parent_suite("UI")
 def test_buy_to_product(browser_setup):
     AuthorizationPage() \
         .open_authorization_page() \
