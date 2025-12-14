@@ -23,7 +23,7 @@ def load_env():
     load_dotenv()
 
 
-@pytest.fixture(scope='class', autouse=True)  # ✅ scope='class' для всех UI тестов
+@pytest.fixture(scope='class', autouse=True)
 def browser_setup(request):
     """Единая настройка Selenoid браузера для класса тестов"""
     browser_version = request.config.getoption('browser_version') or DEFAULT_BROWSER_VERSION
@@ -47,17 +47,15 @@ def browser_setup(request):
         "goog:loggingPrefs": {"browser": "ALL"}
     }
 
-    # ✅ Правильная настройка capabilities для Remote
+    # ✅ Правильная настройка по примеру
+    options.capabilities.update(selenoid_capabilities)
+
     login = os.getenv('SELENOID_LOGIN')
     password = os.getenv('SELENOID_PASS')
     url = os.getenv('SELENOID_URL')
 
-    options.set_capability('browserName', 'chrome')
-    options.set_capability('browserVersion', browser_version)
-    options.set_capability('selenoid:options', selenoid_capabilities['selenoid:options'])
-
     driver = webdriver.Remote(
-        command_executor=f"https://{login}:{password}@{url}",  # ✅ /wd/hub
+        command_executor=f"https://{login}:{password}@{url}",  # ✅ /wd/hub добавлен
         options=options
     )
 
@@ -77,7 +75,7 @@ def browser_setup(request):
         pass
 
 
-@pytest.fixture(scope="class")  # ✅ Теперь совместим с browser_setup
+@pytest.fixture(scope="class")
 def log_in_saucedemo(browser_setup):
     """Успешный логин на saucedemo"""
     from pages.authorization_page import AuthorizationPage
@@ -88,7 +86,7 @@ def log_in_saucedemo(browser_setup):
     auth.submit()
 
 
-@pytest.fixture(scope="class")  # ✅ Теперь совместим с browser_setup
+@pytest.fixture(scope="class")
 def log_in_saucedemo_fail(browser_setup):
     """Неуспешный логин на saucedemo"""
     from pages.authorization_page import AuthorizationPage
