@@ -6,7 +6,7 @@ from pages.authorization_page import AuthorizationPage
 from pages.inventory_page import InventoryPage
 
 @allure.severity(Severity.CRITICAL)
-@allure.title("Удаление товара из корзины")
+@allure.title("Удаление товара из корзины.")
 @allure.suite("Позитивные тесты")
 @allure.tag("UI", "REGRESS")
 @allure.suite("All Items")

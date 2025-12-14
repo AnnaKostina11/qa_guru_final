@@ -5,7 +5,7 @@ from allure_commons.types import Severity
 from pages.authorization_page import AuthorizationPage
 
 @allure.severity(Severity.CRITICAL)
-@allure.title("Выход из аккаунта")
+@allure.title("Выход из аккаунта.")
 @allure.suite("Позитивные тесты")
 @allure.tag("UI", "REGRESS")
 @allure.suite("All Items")

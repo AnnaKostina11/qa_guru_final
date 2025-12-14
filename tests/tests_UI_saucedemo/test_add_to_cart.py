@@ -6,7 +6,7 @@ from pages.inventory_page import InventoryPage
 
 
 @allure.severity(Severity.CRITICAL)
-@allure.title("Добавление в корзину")
+@allure.title("Добавление в корзину.")
 @allure.suite("Позитивные тесты")
 @allure.tag("UI", "REGRESS")
 @allure.suite("All Items")

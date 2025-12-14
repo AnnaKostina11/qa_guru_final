@@ -6,7 +6,7 @@ from pages.inventory_page import InventoryPage
 from pages.cart_page import CartPage
 
 @allure.severity(Severity.CRITICAL)
-@allure.title("Оформление заказа")
+@allure.title("Оформление заказа.")
 @allure.suite("Позитивные тесты")
 @allure.tag("UI", "REGRESS")
 @allure.suite("All Items")

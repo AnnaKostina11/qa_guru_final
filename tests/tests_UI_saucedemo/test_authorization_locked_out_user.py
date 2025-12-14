@@ -5,7 +5,7 @@ from pages.authorization_page import AuthorizationPage
 
 
 @allure.severity(Severity.CRITICAL)
-@allure.title("Авторизация")
+@allure.title("Авторизация негативная.")
 @allure.suite("Негативные тесты")
 @allure.tag("UI", "REGRESS")
 @allure.suite("All Items")
