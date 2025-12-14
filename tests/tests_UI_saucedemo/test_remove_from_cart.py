@@ -1,9 +1,9 @@
+import os
 import allure
 from allure_commons.types import Severity
-import os
-from pages.home_page import HomePage
+
 from pages.authorization_page import AuthorizationPage
-import config
+from pages.inventory_page import InventoryPage
 
 
 @allure.title("Удаление товара из корзины")
@@ -13,18 +13,19 @@ import config
 @allure.parent_suite("UI")
 class TestShoppingCart:
     def test_remove_from_cart(self, browser_setup):
-        browser = browser_setup
         # Логин
-        auth_page = AuthorizationPage(browser)
-        auth_page.open_authorization_page()
-        auth_page.fill_username(os.getenv("SAUCEDEMO_LOGIN"))
-        auth_page.fill_password(os.getenv("SAUCEDEMO_PASSWORD"))
-        auth_page.submit()
+        AuthorizationPage() \
+            .open_authorization_page() \
+            .fill_username(os.getenv("SAUCEDEMO_LOGIN")) \
+            .fill_password(os.getenv("SAUCEDEMO_PASSWORD")) \
+            .submit()
 
-        home_page = HomePage(browser)
-        home_page.add_product_to_shopping_cart_by_text("Sauce Labs Backpack")
-        home_page.verify_cart_badge_text("1")
+        inventory = InventoryPage().should_be_opened()
 
-        home_page.remove_product_from_cart_by_text("Sauce Labs Backpack")
+        inventory.add_product_to_shopping_cart_by_text("Sauce Labs Backpack")
+        inventory.verify_cart_badge_text("1")
 
-        home_page.verify_cart_badge_not_visible()
+        # удаление: на inventory кнопка станет Remove (селектор остаётся btn_inventory)
+        inventory.remove_product_from_cart_by_text("Sauce Labs Backpack")
+
+        inventory.verify_cart_badge_not_visible()

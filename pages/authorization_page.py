@@ -34,6 +34,8 @@ class AuthorizationPage(BasePage):
         self.click(self.login_button)
         return self
 
+    # VERIFICATIONS
+
     @allure.step("Проверка title страницы")
     def verify_page_title(self) -> "AuthorizationPage":
         browser.should(have.title("Swag Labs"))
@@ -41,7 +43,13 @@ class AuthorizationPage(BasePage):
 
     @allure.step("Проверка URL страницы авторизации")
     def verify_url(self) -> "AuthorizationPage":
-        browser.should(have.url(f"{os.getenv('SAUCEDEMO_URL', 'https://www.saucedemo.com')}/"))
+        base = os.getenv("SAUCEDEMO_URL", "https://www.saucedemo.com").rstrip("/")
+        browser.should(have.url(f"{base}/"))
+        return self
+
+    @allure.step("Проверка логотипа на странице логина")
+    def verify_login_logo(self) -> "AuthorizationPage":
+        self.login_logo.should(be.visible)
         return self
 
     @allure.step("Проверка сообщения об ошибке заблокированного пользователя")

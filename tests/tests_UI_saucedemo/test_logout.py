@@ -1,9 +1,8 @@
+import os
 import allure
 from allure_commons.types import Severity
-import os
-from pages.home_page import HomePage
+
 from pages.authorization_page import AuthorizationPage
-import config
 
 
 @allure.title("Выход из аккаунта")
@@ -13,23 +12,15 @@ import config
 @allure.parent_suite("UI")
 class TestAuthorization:
     def test_logout(self, browser_setup):
-        browser = browser_setup
-        """
-        Проверяет корректный выход из аккаунта
-        Ожидается: возврат на страницу авторизации
-        """
-        # Логин
-        auth_page = AuthorizationPage(browser)
-        auth_page.open_authorization_page()
-        auth_page.fill_username(os.getenv("SAUCEDEMO_LOGIN"))
-        auth_page.fill_password(os.getenv("SAUCEDEMO_PASSWORD"))
-        auth_page.submit()
+        auth_page = AuthorizationPage() \
+            .open_authorization_page() \
+            .fill_username(os.getenv("SAUCEDEMO_LOGIN")) \
+            .fill_password(os.getenv("SAUCEDEMO_PASSWORD")) \
+            .submit()
 
-        # Выход
-        home_page = HomePage(browser)
-        home_page.logout()
+        # logout доступен из BasePage, поэтому можно вызвать прямо отсюда
+        auth_page.logout()
 
-        # Проверки
         auth_page.verify_url()
         auth_page.verify_page_title()
         auth_page.verify_login_logo()
