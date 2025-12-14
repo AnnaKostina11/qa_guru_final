@@ -4,7 +4,7 @@ import pytest
 from selene.support.shared import browser
 from selenium.webdriver.chrome.options import Options
 from selenium import webdriver
-#from contact_list_app.utils import attach
+from automation_exercise.utils import attach
 
 
 @allure.title('Инициализация браузера.')
