@@ -12,7 +12,6 @@ DEFAULT_BROWSER_VERSION = "128.0"
 BASE_URL = os.getenv('BASE_URL', 'https://www.saucedemo.com')
 
 
-# ✅ РЕГИСТРАЦИЯ ОПЦИЙ (ОБЯЗАТЕЛЬНО!)
 def pytest_addoption(parser):
     parser.addoption(
         '--browser_version',
@@ -33,54 +32,65 @@ def load_env():
     load_dotenv()
 
 
+@pytest.fixture(scope='class', autouse=True)
+def browser_setup(request):
+    """Единая настройка браузера для всех тестов"""
+    browser_version = request.config.getoption('--browser_version') or DEFAULT_BROWSER_VERSION
 
-import pytest
+    # ✅ Selene настройки
+    browser.config.window_width = 1920
+    browser.config.window_height = 1080
+    browser.config.timeout = 10.0
 
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selene import Browser, Config
+    # ✅ ✅ КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: base_url как CALLABLE
+    def open_base_url(path: str = "/") -> None:
+        browser.open(BASE_URL.rstrip('/') + path)
 
-from automation_exercise.utils import attach
-from dotenv import load_dotenv
-import os
+    browser.config.base_url = open_base_url  # ← CALLABLE!
 
-@pytest.fixture(scope='function')
-def setup_browser(request):
-    load_dotenv()
-    selenoid_login = os.getenv("SELENOID_LOGIN")
-    selenoid_pass = os.getenv("SELENOID_PASS")
-    selenoid_url = os.getenv("SELENOID_URL")
+    # Определяем remote/local
+    is_remote = bool(os.getenv('SELENOID_URL')) or request.config.getoption('remote')
 
     options = Options()
-    selenoid_capabilities = {
-        "browserName": "chrome",
-        "browserVersion": "128.0",
-        "selenoid:options": {
-            "enableVNC": True,
-            "enableVideo": True
+
+    if is_remote:
+        login = os.getenv('SELENOID_LOGIN', 'admin')
+        password = os.getenv('SELENOID_PASSWORD', 'admin')
+        url = os.getenv('SELENOID_URL', 'selenoid.default.svc.cluster.local')
+
+        selenoid_capabilities = {
+            "browserName": "chrome",
+            "browserVersion": browser_version,
+            "selenoid:options": {
+                "enableVNC": True,
+                "enableVideo": True,
+                "enableLog": True
+            }
         }
-    }
-    options.capabilities.update(selenoid_capabilities)
-    driver = webdriver.Remote(
-        command_executor=f"https://{selenoid_login}:{selenoid_pass}@{selenoid_url}",
-        options=options
-    )
+        options.set_capability('selenoid:options', selenoid_capabilities['selenoid:options'])
 
-    browser = Browser(Config(driver=driver))
+        driver = webdriver.Remote(
+            command_executor=f'https://{login}:{password}@{url}/wd/hub',
+            options=options
+        )
+    else:
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+        driver = webdriver.Chrome(options=options)
 
-    browser.driver.set_window_size(1920, 2000)
+    browser.config.driver = driver
+    browser.config.driver.maximize_window()
 
     yield browser
 
+    # Allure attachments
     attach.add_screenshot(browser)
     attach.add_logs(browser)
     attach.add_html(browser)
     attach.add_video(browser)
-
     browser.quit()
 
 
-# ✅ LOGIN FIXTURE (без изменений)
 @pytest.fixture(scope="class")
 def log_in_saucedemo():
     """Логин на saucedemo через Selene"""
@@ -88,7 +98,7 @@ def log_in_saucedemo():
     from pages.home_page import HomePage
 
     auth = AuthorizationPage(browser)
-    auth.open_authorization_page()
+    auth.open_authorization_page()  # ✅ Теперь работает!
     auth.fill_username(config.SAUCEDEMO_LOGIN)
     auth.fill_password(config.SAUCEDEMO_PASSWORD)
     auth.submit()
