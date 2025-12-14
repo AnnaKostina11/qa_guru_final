@@ -1,53 +1,48 @@
-import json
+import os
 import allure
 import pytest
-from selenium import webdriver
+from selene.support.shared import browser
 from selenium.webdriver.chrome.options import Options
-import config
+from selenium import webdriver
+#from contact_list_app.utils import attach
 
 
-@pytest.hookimpl(tryfirst=True, hookwrapper=True)
-def pytest_runtest_makereport(item, call):
-    outcome = yield
-    rep = outcome.get_result()
-    if rep.when == "call" and rep.failed:
-        item.status = "failed"
-    else:
-        item.status = "passed"
+@allure.title('Инициализация браузера.')
+@pytest.fixture(scope='function', autouse=True)
+def manage_browser(request):
+    browser.config.base_url = os.getenv('BASE_URL')
+    browser.config.window_width = 1920
+    browser.config.window_height = 1080
 
+    is_remote = request.config.getoption('--remote')
 
-@pytest.fixture(scope="class")
-def browser(request):
-    chrome_options = Options()
-    prefs = {
-        "credentials_enable_service": False,
-        "profile.password_manager_enabled": False,
-        "profile.password_manager_leak_detection": False,
-        "profile.default_content_setting_values.notifications": 2
-    }
-    chrome_options.add_experimental_option("prefs", prefs)
-    chrome_options.add_argument("--disable-web-security")
-    chrome_options.add_argument("--disable-features=VizDisplayCompositor")
+    if is_remote:
+        selenoid_login = os.getenv('SELENOID_LOGIN')
+        selenoid_pass = os.getenv('SELENOID_PASS')
+        selenoid_url = os.getenv('SELENOID_URL')
+        selenoid_capabilities = {
+            'browserName': 'chrome',
+            'browserVersion': '128.0',
+            'selenoid:options': {
+                'enableVideo': True
+            }
+        }
 
-    driver = webdriver.Chrome(options=chrome_options)
-    driver.maximize_window()
-    yield driver
-    if hasattr(request.node, 'status') and request.node.status == "failed":
-        allure.attach(
-            name="screenshot",
-            body=driver.get_screenshot_as_png(),
-            attachment_type=allure.attachment_type.PNG,
+        options = Options()
+        options.capabilities.update(selenoid_capabilities)
+
+        browser.config.driver = webdriver.Remote(
+            command_executor=f'https://{selenoid_login}:{selenoid_pass}@{selenoid_url}/wd/hub',
+            options=options
         )
-    driver.quit()
 
+    yield
 
-@pytest.fixture(scope="class")
-def log_in_saucedemo(browser):
-    from pages.authorization_page import AuthorizationPage
-    from pages.home_page import HomePage
-    auth = AuthorizationPage(browser)
-    auth.open_authorization_page()
-    auth.fill_username(config.SAUCEDEMO_LOGIN)
-    auth.fill_password(config.SAUCEDEMO_PASSWORD)
-    auth.submit()
-    HomePage(browser).verify_url()
+    attach.screenshot()
+    attach.logs()
+    attach.html()
+
+    if is_remote:
+        attach.add_video(browser)
+
+    browser.quit()
