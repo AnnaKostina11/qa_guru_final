@@ -22,6 +22,14 @@ class CartPage(BasePage):
     # Complete page
     complete_header = s('[data-test="complete-header"]')
 
+    @allure.step("Перейти к оформлению")
+    def click_checkout_button(self) -> "CartPage":
+        self.checkout_button.should(be.clickable).click()
+        # убеждаемся, что мы на шаге информации
+        self.title.should(have.text("Checkout: Your Information"))
+        self.first_name_field.should(be.visible)
+        return self
+
     @allure.step("Проверка страницы корзины")
     def should_be_opened(self) -> "CartPage":
         self.title.should(have.text("Your Cart"))
