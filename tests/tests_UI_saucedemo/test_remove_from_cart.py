@@ -12,7 +12,8 @@ import config
 @allure.suite("Shopping Cart")
 @allure.parent_suite("UI")
 class TestShoppingCart:
-    def test_remove_from_cart(self, browser):
+    def test_remove_from_cart(self, manage_browser):
+        browser = manage_browser
         # Логин
         auth_page = AuthorizationPage(browser)
         auth_page.open_authorization_page()

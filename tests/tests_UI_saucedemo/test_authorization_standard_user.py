@@ -10,7 +10,8 @@ from pages.home_page import HomePage
 @allure.severity(Severity.CRITICAL)
 @allure.parent_suite('UI')
 @allure.suite('user_authorization')
-def test_authorization(browser):
+def test_authorization(manage_browser):
+    browser = manage_browser
     auth = AuthorizationPage(browser)
     home = HomePage(browser)
     auth.open_authorization_page()

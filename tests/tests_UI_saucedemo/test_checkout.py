@@ -10,7 +10,8 @@ from pages.home_page import HomePage
 @allure.tag("UI", "REGRESS")
 @allure.suite("Позитивные тесты")
 @allure.parent_suite("Тесты UI")
-def test_buy_to_product(browser, log_in_saucedemo):
+def test_buy_to_product(manage_browser, log_in_saucedemo):
+    browser = manage_browser
     home_page = HomePage(browser)
     cart_page = CartPage(browser)
 
