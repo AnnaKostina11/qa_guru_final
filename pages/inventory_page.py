@@ -54,9 +54,9 @@ class InventoryPage(BasePage):
 
     @allure.step("Получить список названий товаров")
     def get_product_names(self) -> list[str]:
-        return [e.get(query=lambda it: it.text) for e in self.product_names]
+        return [e.get(query=lambda el: el().text) for e in self.product_names]
 
     @allure.step("Получить список цен товаров")
     def get_product_prices(self) -> list[float]:
-        texts = [e.get(query=lambda it: it.text) for e in self.product_prices]
-        return [float(p.replace("$", "").strip()) for p in texts]
+        prices = [e.get(query=lambda el: el().text) for e in self.product_prices]
+        return [float(p.replace("$", "").strip()) for p in prices]

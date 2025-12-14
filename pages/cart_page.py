@@ -7,27 +7,24 @@ from pages.base_page import BasePage
 
 class CartPage(BasePage):
     title = s(".title")
-    cart_items = s(".cart_list")
     checkout_button = s('[data-test="checkout"]')
 
-    # Checkout step 1 (информация)
     first_name_field = s('[data-test="first-name"]')
     last_name_field = s('[data-test="last-name"]')
     postal_code_field = s('[data-test="postal-code"]')
     continue_button = s('[data-test="continue"]')
 
-    # Checkout step 2 (overview)
     finish_button = s('[data-test="finish"]')
-
-    # Complete page
     complete_header = s('[data-test="complete-header"]')
 
-    @allure.step("Перейти к оформлению")
+    @allure.step("Перейти к оформлению (ожидание шага Your Information)")
     def click_checkout_button(self) -> "CartPage":
         self.checkout_button.should(be.clickable).click()
-        # убеждаемся, что мы на шаге информации
+
+        # Ключевой момент: убедиться, что реально открылась форма
         self.title.should(have.text("Checkout: Your Information"))
         self.first_name_field.should(be.visible)
+
         return self
 
     @allure.step("Проверка страницы корзины")
