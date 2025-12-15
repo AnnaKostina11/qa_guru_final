@@ -2,8 +2,8 @@ import json
 import allure
 from allure_commons.types import Severity
 
-from automation_exercise.API.api_manager import APIManager
 from automation_exercise.utils.base_test_request import BaseTestRequests
+from automation_exercise.utils.schemas import MESSAGE_ONLY_SCHEMA
 from automation_exercise.utils.static_values import StatusMessage
 
 
@@ -15,19 +15,15 @@ class TestCreateAccount(BaseTestRequests):
     @allure.parent_suite("API")
     @allure.suite("POST")
     @allure.link("https://www.automationexercise.com", name="Testing API")
-    def test_successful_account_creation(self, create_user):
-        api = APIManager()
+    def test_successful_account_creation(self, api_application, create_user):
+        with allure.step("Создать аккаунт через API"):
+            response_info = api_application.post.create_account(create_user)
 
-        with allure.step("Создать аккаунт через API (POST createAccount)"):
-            response_info = api.post.create_account(create_user)
+        with allure.step("Проверить HTTP статус, business responseCode и схему"):
+            body = self.check_response_status_and_message_business_code(
+                response_info, expected_http=200, expected_business=201, schema=MESSAGE_ONLY_SCHEMA
+            )
 
-        with allure.step("Проверить HTTP статус-код и бизнес-код ответа"):
-            self.check_response_status_and_message_business_code(response_info, 200, 201)
-
-        with allure.step("Проверить сообщение о создании пользователя"):
-            response = response_info.get("response")
-            # у тебя иногда message приходит как JSON-строка внутри JSON
-            message_raw = response["message"]
-            nested_message = json.loads(message_raw) if isinstance(message_raw, str) else message_raw
-
-            assert nested_message["message"] == StatusMessage.post_user_created
+        with allure.step(f"Проверить текст сообщения = {StatusMessage.post_user_created}"):
+            nested = json.loads(body["message"]) if isinstance(body["message"], str) else body["message"]
+            assert nested["message"] == StatusMessage.post_user_created

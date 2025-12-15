@@ -1,8 +1,10 @@
+import json
 import allure
 from allure_commons.types import Severity
 
-from automation_exercise.API.api_manager import APIManager
 from automation_exercise.utils.base_test_request import BaseTestRequests
+from automation_exercise.utils.schemas import MESSAGE_ONLY_SCHEMA
+from automation_exercise.utils.static_values import StatusMessage
 
 
 class TestVerifyLogin(BaseTestRequests):
@@ -13,14 +15,19 @@ class TestVerifyLogin(BaseTestRequests):
     @allure.parent_suite("API")
     @allure.suite("POST")
     @allure.link("https://www.automationexercise.com", name="Testing API")
-    def test_valid_status_code(self, create_user):
-        api = APIManager()
+    def test_valid_status_code(self, api_application, create_user):
+        with allure.step("Создать пользователя через API"):
+            api_application.post.create_account(create_user)
 
-        with allure.step("Создать пользователя через API (POST createAccount)"):
-            api.post.create_account(create_user)
+        with allure.step("Проверить логин через API (verifyLogin)"):
+            response_info = api_application.post.verify_login(create_user)
 
-        with allure.step("Отправить запрос проверки логина (POST verifyLogin)"):
-            response_info = api.post.verify_login(create_user)
+        with allure.step("Проверить HTTP статус, business responseCode и схему"):
+            body = self.check_response_status_and_message_business_code(
+                response_info, expected_http=200, expected_business=200, schema=MESSAGE_ONLY_SCHEMA
+            )
 
-        with allure.step("Проверить HTTP статус-код и бизнес-код ответа"):
-            self.check_response_status_and_message_business_code(response_info, 200, 200)
+        # если у тебя есть константа на verifyLogin success — используй её
+        with allure.step("Проверить, что message присутствует"):
+            nested = json.loads(body["message"]) if isinstance(body["message"], str) else body["message"]
+            assert "message" in nested
