@@ -13,7 +13,6 @@ def load_env():
 
 @pytest.fixture(scope="session")
 def api_base_url() -> str:
-    # Базовый URL в контексте (доступен везде как фикстура)
     return os.getenv("AUTOMATIONEXERCISE_API_URL", "https://www.automationexercise.com/api").rstrip("/")
 
 

@@ -17,7 +17,6 @@ class BaseTestRequests:
         body = response_info.get("response")
 
         with step("Проверка и нормализация response в dict"):
-            # 1) Если response пришёл строкой — пробуем распарсить как JSON
             if isinstance(body, str):
                 try:
                     body = json.loads(body)
@@ -26,8 +25,6 @@ class BaseTestRequests:
 
             assert isinstance(body, dict), f"response must be dict, got: {type(body)}"
 
-            # 2) Если сервер/клиент завернул JSON-ответ внутрь поля "message"
-            # body == {"message": "{\"responseCode\": 200, \"message\": \"...\"}"}
             if "responseCode" not in body and isinstance(body.get("message"), str):
                 msg = body["message"].strip()
                 if msg.startswith("{") and msg.endswith("}"):

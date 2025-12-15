@@ -40,7 +40,7 @@ class BasePage:
     @allure.step("Выход из аккаунта (SauceDemo)")
     def logout(self) -> None:
         menu_button = s("#react-burger-menu-btn")
-        logout_link = s("#logout_sidebar_link")  # запасной вариант: s('[data-test="logout-sidebar-link"]')
+        logout_link = s("#logout_sidebar_link")
 
         with allure.step("Open burger menu"):
             menu_button.should(be.clickable).click()

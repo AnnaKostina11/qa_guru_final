@@ -20,7 +20,6 @@ class APIClient:
         url = f"{self.base_url}{endpoint}"
         kwargs.setdefault("timeout", self.timeout)
 
-        # Логирование в консоль
         logger.info("HTTP %s %s", method.upper(), url)
         if "params" in kwargs:
             logger.info("Params: %s", kwargs["params"])
@@ -29,7 +28,6 @@ class APIClient:
         if "json" in kwargs:
             logger.info("JSON: %s", kwargs["json"])
 
-        # Allure attachments (request)
         attach_text("request.method", method.upper())
         attach_text("request.url", url)
         if "params" in kwargs:
@@ -42,7 +40,6 @@ class APIClient:
         resp = self.session.request(method, url, **kwargs)
         text = resp.text
 
-        # Пытаемся распарсить JSON независимо от content-type
         try:
             payload: t.Any = resp.json()
         except Exception:
@@ -60,11 +57,10 @@ class APIClient:
             "headers": dict(resp.headers),
         }
 
-        # Логирование + Allure attachments (response)
         logger.info("Status: %s", resp.status_code)
         attach_text("response.status_code", str(resp.status_code))
         attach_json("response.headers", dict(resp.headers))
-        attach_text("response.rawtext", text[:5000])  # ограничение на всякий случай
+        attach_text("response.rawtext", text[:5000])
         attach_json("response.parsed", payload)
 
         return response_info
