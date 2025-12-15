@@ -13,7 +13,7 @@ class APIManager:
         # Один общий HTTP client (Session) для всех запросов.
         self.client = APIClient(base_url=base_url)
 
-        # Группировка эндпоинтов по HTTP-методам (как в проекте).
+        # Группировка эндпоинтов по HTTP-методам.
         self.get = GetAPI(self.client)
         self.post = PostAPI(self.client)
         self.put = PutAPI(self.client)
