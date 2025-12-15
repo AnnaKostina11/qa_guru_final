@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import Optional
 
+
 @dataclass
 class UserCard:
     name: str
@@ -8,6 +9,7 @@ class UserCard:
     cvc: str
     expiration_month: str
     expiration_year: str
+
 
 @dataclass
 class User:

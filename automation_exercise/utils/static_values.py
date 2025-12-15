@@ -1,10 +1,13 @@
 from enum import Enum
 
+
 class Country(Enum):
     india = "India"
 
+
 class Months(Enum):
     may = ("5", "May")
+
 
 class StatusMessage:
     post_user_created = "User created!"

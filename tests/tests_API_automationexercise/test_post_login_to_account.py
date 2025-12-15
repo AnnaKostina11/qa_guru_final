@@ -1,10 +1,7 @@
 import allure
-import pytest
-from allure import step
 from allure_commons.types import Severity
 
 from automation_exercise.utils.base_test_request import BaseTestRequests
-
 
 
 class TestVerifyLogin(BaseTestRequests):

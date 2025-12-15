@@ -1,5 +1,6 @@
 from automation_exercise.API.client import send_api_request
 
+
 def post_create_account(user):
     data = {
         "name": user.nick_name,
@@ -21,6 +22,7 @@ def post_create_account(user):
         "mobile_number": user.mobile_number
     }
     return send_api_request("POST", "/createAccount", data=data)
+
 
 def verify_login(user):
     data = {"email": user.email, "password": user.password}

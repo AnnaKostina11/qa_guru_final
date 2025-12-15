@@ -1,9 +1,12 @@
-import allure
 import json
+
+import allure
 from allure import step
 from allure_commons.types import Severity
+
 from automation_exercise.utils.base_test_request import BaseTestRequests
 from automation_exercise.utils.static_values import StatusMessage
+
 
 class TestCreateAccount(BaseTestRequests):
 

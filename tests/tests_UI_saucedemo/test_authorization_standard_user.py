@@ -1,6 +1,8 @@
 import os
+
 import allure
 from allure_commons.types import Severity
+
 from pages.authorization_page import AuthorizationPage
 from pages.inventory_page import InventoryPage
 

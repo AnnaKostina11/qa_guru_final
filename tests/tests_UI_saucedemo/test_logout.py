@@ -1,8 +1,10 @@
 import os
+
 import allure
 from allure_commons.types import Severity
 
 from pages.authorization_page import AuthorizationPage
+
 
 @allure.severity(Severity.CRITICAL)
 @allure.title("Выход из аккаунта.")

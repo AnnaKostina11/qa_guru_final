@@ -1,11 +1,12 @@
-import allure
 import json
-import pytest
+
+import allure
 from allure import step
 from allure_commons.types import Severity
 
 from automation_exercise.utils.base_test_request import BaseTestRequests
 from automation_exercise.utils.static_values import StatusMessage
+
 
 class TestUserAccount(BaseTestRequests):
 
@@ -39,6 +40,3 @@ class TestUserAccount(BaseTestRequests):
 
         with step(f'Проверка текста сообщения успешного удаления = {StatusMessage.del_account_deleted}'):
             assert nested_message_json['message'] == StatusMessage.del_account_deleted
-
-
-

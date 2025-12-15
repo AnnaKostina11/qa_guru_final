@@ -5,3 +5,4 @@ venv/
 *.pyc
 */allure-results/
 /tests/test_API/allure-results/
+/notifications

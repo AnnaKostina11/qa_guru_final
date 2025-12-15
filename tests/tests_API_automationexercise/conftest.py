@@ -1,8 +1,10 @@
 import pytest
+
+from automation_exercise.API.delete_request import delete_account
+from automation_exercise.API.post_request import post_create_account
 from automation_exercise.data.user import User, UserCard
 from automation_exercise.utils.static_values import Country, Months
-from automation_exercise.API.post_request import post_create_account
-from automation_exercise.API.delete_request import delete_account
+
 
 @pytest.fixture(scope='function')
 def create_user():
@@ -35,16 +37,19 @@ def create_user():
     user.add_card(user_card)
     return user
 
+
 @pytest.fixture(scope='function')
 def create_user_account(create_user):
     delete_account(create_user.email, create_user.password)
     yield post_create_account(create_user)
     delete_account(create_user.email, create_user.password)
 
+
 @pytest.fixture(scope='function')
 def api_application():
     from automation_exercise.app import APIManager
     return APIManager()
+
 
 @pytest.fixture(scope='function')
 def update_user_params(create_user):

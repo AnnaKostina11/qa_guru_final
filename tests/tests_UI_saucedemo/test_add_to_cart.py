@@ -1,7 +1,9 @@
 import os
-from pages.authorization_page import AuthorizationPage
+
 import allure
 from allure_commons.types import Severity
+
+from pages.authorization_page import AuthorizationPage
 from pages.inventory_page import InventoryPage
 
 
@@ -22,4 +24,3 @@ def test_add_to_shopping_cart(browser_setup):
     inventory.add_product_to_shopping_cart_by_text("Sauce Labs Backpack")
     inventory.add_product_to_shopping_cart_by_text("Sauce Labs Bolt T-Shirt")
     inventory.verify_cart_badge_text("2")
-
