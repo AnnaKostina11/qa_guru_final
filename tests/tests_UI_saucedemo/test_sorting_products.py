@@ -9,7 +9,7 @@ from pages.inventory_page import InventoryPage
 @allure.title("Сортировка товаров на главной странице")
 @allure.severity(Severity.CRITICAL)
 @allure.tag("UI", "REGRESS")
-@allure.suite("Products")
+@allure.suite("All Items")
 @allure.parent_suite("UI")
 def test_sorting_products(browser_setup):
     AuthorizationPage() \
