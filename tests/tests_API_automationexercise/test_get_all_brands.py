@@ -25,12 +25,12 @@ class TestAllBrands(BaseTestRequests):
                 schema=BRANDS_LIST_SCHEMA,
             )
 
-        with allure.step("Проверить, что brands не пустой (как в остальных тестах)"):
+        with allure.step("Проверить, что brands не пустой"):
             brands = body.get("brands")
             assert isinstance(brands, list), f"brands must be list, got: {type(brands)}"
             assert len(brands) > 0, "brands list must be non-empty"
 
         with allure.step("Проверить, что первый brand содержит непустое имя"):
-            first = body["brands"][0]
+            first = brands[0]
             assert isinstance(first, dict), f"brand item must be dict, got: {type(first)}"
             assert isinstance(first.get("brand"), str) and first["brand"].strip(), f"invalid brand item: {first}"
