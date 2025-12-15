@@ -13,13 +13,11 @@ def load_env():
 
 @pytest.fixture(scope="session")
 def api_base_url() -> str:
-    # Базовый URL для API (контекст для всех запросов)
     return os.getenv("AUTOMATIONEXERCISE_API_URL", "https://www.automationexercise.com/api").rstrip("/")
 
 
 @pytest.fixture(scope="function")
 def api_application(api_base_url):
-    # Новый APIManager из директории automation_exercise/API
     from automation_exercise.API.api_manager import APIManager
     return APIManager(base_url=api_base_url)
 
@@ -60,13 +58,10 @@ def create_user():
 
 @pytest.fixture(scope="function")
 def create_user_account(api_application, create_user):
-    # Подготовка: на всякий случай удаляем (если вдруг остался с прошлого прогона)
     api_application.delete.delete_account(create_user.email, create_user.password)
 
-    # Создаём
     yield api_application.post.create_account(create_user)
 
-    # Cleanup
     api_application.delete.delete_account(create_user.email, create_user.password)
 
 
