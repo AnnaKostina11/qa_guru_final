@@ -23,7 +23,7 @@ class BaseTestRequests:
         - нормализация response в dict (в т.ч. вложенный JSON в поле message)
         - business responseCode
         - JSON Schema
-        - (опционально) десериализация в модель
+        - десериализация в модель
 
         Модель поддерживается в двух вариантах:
         1) model_cls имеет classmethod from_dict(data) -> T
@@ -66,12 +66,10 @@ class BaseTestRequests:
             if from_dict is not None:
                 return from_dict(body)
 
-            # model_cls.from_dict(body)
             if not hasattr(model_cls, "from_dict"):
                 raise AssertionError("model_cls must have from_dict(data: dict) method")
-            return model_cls.from_dict(body)  # type: ignore[attr-defined]
+            return model_cls.from_dict(body)
 
-    # Для обратной совместимости (если где-то уже вызывается старое имя)
     def check_response_status_and_message_business_code(
         self,
         response_info: dict,

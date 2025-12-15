@@ -2,10 +2,16 @@ from automation_exercise.API.client import APIClient
 
 
 class PostAPI:
+    # Группа POST-эндпоинтов.
+    # Каждый метод возвращает response_info (см. APIClient.request),
+    # чтобы дальше его проверял BaseTestRequests.check_response().
+
     def __init__(self, client: APIClient) -> None:
         self.client = client
 
     def create_account(self, user) -> dict:
+        # Формируем body для /createAccount из модели User.
+        # Используем "data" (form-data / x-www-form-urlencoded), как ожидает API automationexercise.
         data = {
             "name": user.nick_name,
             "email": user.email,
@@ -25,8 +31,10 @@ class PostAPI:
             "state": user.state,
             "mobile_number": user.mobile_number,
         }
+
         return self.client.request("POST", "/createAccount", data=data)
 
     def verify_login(self, user) -> dict:
+        # /verifyLogin принимает только email/password.
         data = {"email": user.email, "password": user.password}
         return self.client.request("POST", "/verifyLogin", data=data)

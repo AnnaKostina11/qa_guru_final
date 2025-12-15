@@ -1,3 +1,8 @@
+# Схема для GET /brandsList
+# Проверяем, что:
+# - есть responseCode
+# - brands — массив и не пустой
+# - у каждого элемента brands есть поле brand (непустая строка)
 BRANDS_LIST_SCHEMA = {
     "type": "object",
     "required": ["responseCode", "brands"],
@@ -20,12 +25,15 @@ BRANDS_LIST_SCHEMA = {
     "additionalProperties": True,
 }
 
+# Универсальная схема для ответов вида:
+# {"responseCode": <int>, "message": <str>}
+# Используется в create/update/delete/verifyLogin.
 MESSAGE_ONLY_SCHEMA = {
     "type": "object",
     "required": ["responseCode", "message"],
     "properties": {
         "responseCode": {"type": "integer"},
-        "message": {"type": "string"},
+        "message": {"type": ["string", "object"]},
     },
     "additionalProperties": True,
 }
