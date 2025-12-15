@@ -74,10 +74,6 @@ def update_user_params(create_user):
 
 @pytest.fixture(scope="function")
 def ui_login_user(api_application, create_user):
-    """
-    Подготовка сущности для UI: гарантируем, что пользователь существует.
-    (Если UI проект будет логиниться через форму, ему нужен валидный аккаунт.)
-    """
     api_application.delete.delete_account(create_user.email, create_user.password)
     api_application.post.create_account(create_user)
     return create_user

@@ -19,8 +19,18 @@ class TestAllBrands(BaseTestRequests):
 
         with allure.step("Проверить HTTP статус, business responseCode и схему"):
             body = self.check_response_status_and_message_business_code(
-                response_info, expected_http=200, expected_business=200, schema=BRANDS_LIST_SCHEMA
+                response_info,
+                expected_http=200,
+                expected_business=200,
+                schema=BRANDS_LIST_SCHEMA,
             )
 
-        with allure.step("Проверить, что brands не пустой"):
-            assert len(body["brands"]) > 0
+        with allure.step("Проверить, что brands не пустой (как в остальных тестах)"):
+            brands = body.get("brands")
+            assert isinstance(brands, list), f"brands must be list, got: {type(brands)}"
+            assert len(brands) > 0, "brands list must be non-empty"
+
+        with allure.step("Проверить, что первый brand содержит непустое имя"):
+            first = body["brands"][0]
+            assert isinstance(first, dict), f"brand item must be dict, got: {type(first)}"
+            assert isinstance(first.get("brand"), str) and first["brand"].strip(), f"invalid brand item: {first}"
