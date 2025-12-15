@@ -13,6 +13,7 @@ def load_env():
 
 @pytest.fixture(scope="session")
 def api_base_url() -> str:
+    # Базовый URL в контексте (доступен везде как фикстура)
     return os.getenv("AUTOMATIONEXERCISE_API_URL", "https://www.automationexercise.com/api").rstrip("/")
 
 
@@ -51,7 +52,6 @@ def create_user():
         expiration_month="02",
         expiration_year="2030",
     )
-
     user.add_card(user_card)
     return user
 
@@ -59,9 +59,7 @@ def create_user():
 @pytest.fixture(scope="function")
 def create_user_account(api_application, create_user):
     api_application.delete.delete_account(create_user.email, create_user.password)
-
     yield api_application.post.create_account(create_user)
-
     api_application.delete.delete_account(create_user.email, create_user.password)
 
 
@@ -73,3 +71,14 @@ def update_user_params(create_user):
         "email": create_user.email,
         "password": create_user.password,
     }
+
+
+@pytest.fixture(scope="function")
+def ui_login_user(api_application, create_user):
+    """
+    Подготовка сущности для UI: гарантируем, что пользователь существует.
+    (Если UI проект будет логиниться через форму, ему нужен валидный аккаунт.)
+    """
+    api_application.delete.delete_account(create_user.email, create_user.password)
+    api_application.post.create_account(create_user)
+    return create_user

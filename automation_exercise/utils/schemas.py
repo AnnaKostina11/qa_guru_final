@@ -25,7 +25,7 @@ MESSAGE_ONLY_SCHEMA = {
     "required": ["responseCode", "message"],
     "properties": {
         "responseCode": {"type": "integer"},
-        "message": {"type": ["string", "object"]},
+        "message": {"type": "string"},
     },
     "additionalProperties": True,
 }
