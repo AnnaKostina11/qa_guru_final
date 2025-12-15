@@ -1,3 +1,4 @@
+import json
 import allure
 from allure_commons.types import Severity
 
@@ -14,14 +15,19 @@ class TestAllBrands(BaseTestRequests):
     @allure.link("https://www.automationexercise.com", name="Testing API")
     def test_valid_status_code(self, api_application):
         with allure.step("Отправить GET-запрос на получение списка брендов"):
-            response = api_application.get.all_brand_list()
+            response_info = api_application.get.all_brand_list()
 
         with allure.step("Проверить HTTP статус-код и бизнес-код ответа"):
-            self.check_response_status_and_message_business_code(response, 200, 200)
-            assert response.status_code == 200, f"Неожиданный HTTP статус: {response.status_code}"
+            self.check_response_status_and_message_business_code(response_info, 200, 200)
+
+            # если в dict хранится реальный HTTP код
+            # (название ключа может отличаться — смотри как устроен твой BaseTestRequests)
+            http_status = response_info.get("status_code") or response_info.get("status")
+            assert http_status == 200, f"Неожиданный HTTP статус: {http_status}"
 
         with allure.step("Проверить, что ответ в формате JSON"):
-            body = response.json()
+            response_json_raw = response_info.get("response")
+            body = json.loads(response_json_raw) if isinstance(response_json_raw, str) else response_json_raw
             assert isinstance(body, dict), "JSON-ответ должен быть объектом (dict)"
 
         with allure.step("Проверить наличие и значение поля responseCode"):
