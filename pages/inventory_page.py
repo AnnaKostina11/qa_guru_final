@@ -1,6 +1,7 @@
 import allure
 from selene import have, be
 from selene.support.shared.jquery_style import s, ss
+from selenium.webdriver.support.select import Select
 
 from pages.base_page import BasePage
 
@@ -46,17 +47,19 @@ class InventoryPage(BasePage):
     def open_cart(self) -> None:
         self.cart_link.should(be.clickable).click()
 
-    @allure.step("Выбор сортировки: {value}")
+    # NEW METHODS (sorting)
+
+    @allure.step("Выбор сортировки товаров: {value}")
     def select_sort_option(self, value: str) -> "InventoryPage":
-        self.sort_select.should(be.visible).select_option_by_value(value)
-        self.sort_select.should(have.value(value))
+        select_el = self.sort_select.should(be.visible).get(query=lambda el: el())
+        Select(select_el).select_by_value(value)
         return self
 
     @allure.step("Получить список названий товаров")
     def get_product_names(self) -> list[str]:
         return [e.get(query=lambda el: el().text) for e in self.product_names]
 
-    @allure.step("Получить список цен товаров")
+    @allure.step("Получить список цен товаров (float)")
     def get_product_prices(self) -> list[float]:
-        prices = [e.get(query=lambda el: el().text) for e in self.product_prices]
-        return [float(p.replace("$", "").strip()) for p in prices]
+        prices_raw = [e.get(query=lambda el: el().text) for e in self.product_prices]
+        return [float(p.replace("$", "").strip()) for p in prices_raw]
