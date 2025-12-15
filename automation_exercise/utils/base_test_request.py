@@ -1,3 +1,4 @@
+import json
 from allure import step
 from jsonschema import validate
 
@@ -14,7 +15,13 @@ class BaseTestRequests:
             assert response_info["status_code"] == expected_http, response_info
 
         body = response_info.get("response")
-        with step("Проверка, что response — JSON объект (dict)"):
+
+        with step("Проверка и нормализация response в dict"):
+            if isinstance(body, str):
+                try:
+                    body = json.loads(body)
+                except Exception as e:
+                    raise AssertionError(f"response is str and not JSON: {body[:300]}") from e
             assert isinstance(body, dict), f"response must be dict, got: {type(body)}"
 
         with step(f"Проверка business responseCode = {expected_business}"):

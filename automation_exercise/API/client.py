@@ -28,30 +28,36 @@ class APIClient:
         }
 
         self.logger.info("API %s %s", method.upper(), url)
-        if req_data["params"]:
-            self.logger.info("Params: %s", req_data["params"])
-        if req_data["data"]:
-            self.logger.info("Data: %s", req_data["data"])
-        if req_data["json"]:
-            self.logger.info("Json: %s", req_data["json"])
 
         resp = self.session.request(method, url, **kwargs)
 
         content_type = resp.headers.get("content-type", "")
-        if content_type.startswith("application/json"):
-            payload: t.Any = resp.json()
+        text = resp.text
+
+        payload: t.Any
+        if "application/json" in content_type.lower():
+            try:
+                payload = resp.json()
+            except Exception:
+                payload = {"message": text}
         else:
-            payload = {"message": resp.text}
+            payload = {"message": text}
 
-        attach_json("API Request", req_data)
-        attach_text("API Response status", f"{resp.status_code}")
-        attach_json("API Response", payload)
-
-        self.logger.info("Status: %s", resp.status_code)
+        # Allure attachments (не ломают тесты, даже если что-то пойдёт не так)
+        try:
+            attach_json("API Request", req_data)
+            attach_text("API Response status", str(resp.status_code))
+            attach_text("API Response content-type", content_type)
+            attach_text("API Response raw text", text[:5000])
+            if isinstance(payload, (dict, list)):
+                attach_json("API Response parsed", payload)
+        except Exception:
+            pass
 
         return {
             "status_code": resp.status_code,
-            "response": payload,
+            "response": payload,   # <-- гарантированно dict/list (или {"message": text})
+            "raw_text": text,
             "url": url,
             "method": method.upper(),
         }
