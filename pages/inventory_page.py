@@ -47,8 +47,6 @@ class InventoryPage(BasePage):
     def open_cart(self) -> None:
         self.cart_link.should(be.clickable).click()
 
-    # NEW METHODS (sorting)
-
     @allure.step("Выбор сортировки товаров: {value}")
     def select_sort_option(self, value: str) -> "InventoryPage":
         select_el = self.sort_select.should(be.visible).get(query=lambda el: el())

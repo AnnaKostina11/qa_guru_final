@@ -18,7 +18,6 @@ class APIClient:
         url = f"{self.base_url}{endpoint}"
         kwargs.setdefault("timeout", self.timeout)
 
-        # Для аттачей/логов сохраним то, что уходит
         req_data = {
             "method": method.upper(),
             "url": url,
@@ -44,7 +43,6 @@ class APIClient:
         else:
             payload = {"message": resp.text}
 
-        # Allure attachments
         attach_json("API Request", req_data)
         attach_text("API Response status", f"{resp.status_code}")
         attach_json("API Response", payload)

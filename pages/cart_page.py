@@ -9,16 +9,13 @@ class CartPage(BasePage):
     title = s(".title")
     checkout_button = s('#checkout')
 
-    # Checkout step 1 (информация)
     first_name_field = s('[data-test="firstName"]')
     last_name_field = s('[data-test="lastName"]')
     postal_code_field = s('[data-test="postalCode"]')
     continue_button = s('[data-test="continue"]')
 
-    # Checkout step 2 (overview)
     finish_button = s('[data-test="finish"]')
 
-    # Complete page
     complete_header = s('[data-test="complete-header"]')
 
     @allure.step("Проверка страницы корзины")

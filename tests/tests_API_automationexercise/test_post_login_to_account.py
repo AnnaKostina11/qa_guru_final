@@ -27,7 +27,6 @@ class TestVerifyLogin(BaseTestRequests):
                 response_info, expected_http=200, expected_business=200, schema=MESSAGE_ONLY_SCHEMA
             )
 
-        # если у тебя есть константа на verifyLogin success — используй её
         with allure.step("Проверить, что message присутствует"):
             nested = json.loads(body["message"]) if isinstance(body["message"], str) else body["message"]
             assert "message" in nested

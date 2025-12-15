@@ -19,7 +19,6 @@ def test_logout(browser_setup):
         .fill_password(os.getenv("SAUCEDEMO_PASSWORD")) \
         .submit()
 
-    # logout доступен из BasePage, поэтому можно вызвать прямо отсюда
     auth_page.logout()
 
     auth_page.verify_url()

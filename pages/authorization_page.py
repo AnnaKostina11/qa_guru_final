@@ -35,8 +35,6 @@ class AuthorizationPage(BasePage):
         self.click(self.login_button)
         return self
 
-    # VERIFICATIONS
-
     @allure.step("Проверка title страницы")
     def verify_page_title(self) -> "AuthorizationPage":
         browser.should(have.title("Swag Labs"))
