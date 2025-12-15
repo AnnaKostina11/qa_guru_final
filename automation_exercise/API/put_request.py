@@ -1,5 +1,9 @@
-from automation_exercise.API.client import send_api_request
+from automation_exercise.API.client import APIClient
 
 
-def update_user_account(data):
-    return send_api_request("PUT", "/updateAccount", data=data)
+class PutAPI:
+    def __init__(self, client: APIClient) -> None:
+        self.client = client
+
+    def update_user_account(self, data: dict) -> dict:
+        return self.client.request("PUT", "/updateAccount", data=data)

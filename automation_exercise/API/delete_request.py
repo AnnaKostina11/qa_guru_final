@@ -1,5 +1,9 @@
-from automation_exercise.API.client import send_api_request
+from automation_exercise.API.client import APIClient
 
 
-def delete_account(email, password):
-    return send_api_request("DELETE", "/deleteAccount", data={"email": email, "password": password})
+class DeleteAPI:
+    def __init__(self, client: APIClient) -> None:
+        self.client = client
+
+    def delete_account(self, email: str, password: str) -> dict:
+        return self.client.request("DELETE", "/deleteAccount", data={"email": email, "password": password})

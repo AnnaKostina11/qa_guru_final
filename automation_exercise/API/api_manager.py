@@ -1,0 +1,15 @@
+from automation_exercise.API.client import APIClient
+from automation_exercise.API.delete_request import DeleteAPI
+from automation_exercise.API.get_request import GetAPI
+from automation_exercise.API.post_request import PostAPI
+from automation_exercise.API.put_request import PutAPI
+
+
+class APIManager:
+    def __init__(self, base_url: str | None = None) -> None:
+        self.client = APIClient(base_url=base_url)
+
+        self.get = GetAPI(self.client)
+        self.post = PostAPI(self.client)
+        self.put = PutAPI(self.client)
+        self.delete = DeleteAPI(self.client)
