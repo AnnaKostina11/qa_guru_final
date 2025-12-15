@@ -1,4 +1,5 @@
 import json
+
 import allure
 from allure_commons.types import Severity
 
@@ -25,5 +26,5 @@ class TestUpdateUserAccount(BaseTestRequests):
             )
 
         with allure.step(f"Проверить сообщение об успешном обновлении = {StatusMessage.put_user_update}"):
-            nested = json.loads(body["message"]) if isinstance(body["message"], str) else body["message"]
-            assert nested["message"] == StatusMessage.put_user_update
+            message = body.get("message")
+            assert message == StatusMessage.put_user_update

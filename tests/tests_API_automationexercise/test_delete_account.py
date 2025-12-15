@@ -47,10 +47,4 @@ class TestUserAccount(BaseTestRequests):
 
         with allure.step(f"Проверить сообщение успешного удаления = {StatusMessage.del_account_deleted}"):
             message = body.get("message")
-
-            if isinstance(message, str):
-                s = message.strip()
-                if s.startswith("{") and s.endswith("}"):
-                    message = json.loads(s).get("message")
-
             assert message == StatusMessage.del_account_deleted

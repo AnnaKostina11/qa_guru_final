@@ -1,10 +1,10 @@
 import json
+
 import allure
 from allure_commons.types import Severity
 
 from automation_exercise.utils.base_test_request import BaseTestRequests
 from automation_exercise.utils.schemas import MESSAGE_ONLY_SCHEMA
-from automation_exercise.utils.static_values import StatusMessage
 
 
 class TestVerifyLogin(BaseTestRequests):
@@ -28,5 +28,5 @@ class TestVerifyLogin(BaseTestRequests):
             )
 
         with allure.step("Проверить, что message присутствует"):
-            nested = json.loads(body["message"]) if isinstance(body["message"], str) else body["message"]
-            assert "message" in nested
+            message = body.get("message")
+            assert message is not None and message != ""
