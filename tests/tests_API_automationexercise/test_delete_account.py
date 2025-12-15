@@ -1,6 +1,7 @@
 import allure
 from allure_commons.types import Severity
 
+from automation_exercise.data.api_responses import MessageOnlyResponse
 from automation_exercise.utils.base_test_request import BaseTestRequests
 from automation_exercise.utils.schemas import MESSAGE_ONLY_SCHEMA
 from automation_exercise.utils.static_values import StatusMessage
@@ -21,12 +22,14 @@ class TestUserAccount(BaseTestRequests):
         with allure.step("Удалить пользователя через API"):
             response_info = api_application.delete.delete_account(create_user.email, create_user.password)
 
-        with allure.step("Проверить HTTP статус, business responseCode и схему"):
-            self.check_response_status_and_message_business_code(
-                response_info,
+        with allure.step("Проверить HTTP статус, business responseCode, схему и десериализацию"):
+            # Можно не проверять message, но чтобы стиль был единый — десериализуем тоже.
+            self.check_response(
+                response_info=response_info,
                 expected_http=200,
                 expected_business=200,
                 schema=MESSAGE_ONLY_SCHEMA,
+                model_cls=MessageOnlyResponse,
             )
 
     @allure.id("02_DELETE_REQUEST")
@@ -42,13 +45,14 @@ class TestUserAccount(BaseTestRequests):
         with allure.step("Удалить пользователя через API"):
             response_info = api_application.delete.delete_account(create_user.email, create_user.password)
 
-        with allure.step("Проверить HTTP статус, business responseCode и схему"):
-            body = self.check_response_status_and_message_business_code(
-                response_info,
+        with allure.step("Проверить HTTP статус, business responseCode, схему и десериализацию"):
+            resp = self.check_response(
+                response_info=response_info,
                 expected_http=200,
                 expected_business=200,
                 schema=MESSAGE_ONLY_SCHEMA,
+                model_cls=MessageOnlyResponse,
             )
 
         with allure.step(f"Проверить сообщение успешного удаления = {StatusMessage.del_account_deleted}"):
-            assert body.get("message") == StatusMessage.del_account_deleted
+            assert resp.message == StatusMessage.del_account_deleted
