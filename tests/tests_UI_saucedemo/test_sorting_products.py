@@ -7,7 +7,7 @@ from pages.inventory_page import InventoryPage
 
 
 @allure.title("Сортировка товаров на главной странице")
-@allure.severity(Severity.NORMAL)
+@allure.severity(Severity.CRITICAL)
 @allure.tag("UI", "REGRESS")
 @allure.suite("Products")
 @allure.parent_suite("UI")
