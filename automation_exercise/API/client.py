@@ -1,4 +1,3 @@
-import json
 import logging
 import typing as t
 
@@ -12,7 +11,6 @@ logger = logging.getLogger("api")
 
 class APIClient:
     def __init__(self, base_url: str | None = None, timeout: int = 20) -> None:
-
         self.base_url = (base_url or browser.config.base_url or "").rstrip("/")
         if not self.base_url:
             raise RuntimeError("API base_url is empty. Set browser.config.base_url in conftest.py")
@@ -23,12 +21,12 @@ class APIClient:
     def request(self, method: str, endpoint: str, **kwargs) -> dict:
         if not endpoint.startswith("/"):
             endpoint = "/" + endpoint
-
         url = f"{self.base_url}{endpoint}"
         kwargs.setdefault("timeout", self.timeout)
 
-        # Console logging
+        # Логирование в консоль
         logger.info("HTTP %s %s", method.upper(), url)
+
         if "params" in kwargs:
             logger.info("Params: %s", kwargs["params"])
         if "data" in kwargs:
@@ -52,12 +50,9 @@ class APIClient:
         try:
             payload: t.Any = resp.json()
         except Exception:
-            try:
-                payload = json.loads(text)
-            except Exception:
-                payload = {"message": text}
+            payload = {"message": text}
 
-        # Console logging (обязательно url + code)
+        # Логирование в консоль
         logger.info("Status: %s %s", resp.status_code, url)
 
         # Allure response
