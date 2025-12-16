@@ -8,5 +8,4 @@ class PutAPI:
         self.client = client
 
     def update_user_account(self, data: dict) -> dict:
-        # Пробрасываем data как есть: вызывающая сторона (фикстура) отвечает за наполнение полей.
         return self.client.request("PUT", "/updateAccount", data=data)

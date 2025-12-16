@@ -23,7 +23,6 @@ class TestUserAccount(BaseTestRequests):
             response_info = api_application.delete.delete_account(create_user.email, create_user.password)
 
         with allure.step("Проверить HTTP статус, business responseCode, схему и десериализацию"):
-            # Можно не проверять message, но чтобы стиль был единый — десериализуем тоже.
             self.check_response(
                 response_info=response_info,
                 expected_http=200,

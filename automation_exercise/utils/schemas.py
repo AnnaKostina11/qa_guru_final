@@ -27,7 +27,6 @@ BRANDS_LIST_SCHEMA = {
 
 # Универсальная схема для ответов вида:
 # {"responseCode": <int>, "message": <str>}
-# Используется в create/update/delete/verifyLogin.
 MESSAGE_ONLY_SCHEMA = {
     "type": "object",
     "required": ["responseCode", "message"],

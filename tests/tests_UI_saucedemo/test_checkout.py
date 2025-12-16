@@ -25,11 +25,10 @@ def test_buy_to_product(browser_setup):
     inventory.add_product_to_shopping_cart_by_text("Sauce Labs Bike Light")
     inventory.open_cart()
 
-    cart = CartPage().should_be_opened()
-    cart.click_checkout_button()
-    cart.fill_first_name("Anna")
-    cart.fill_last_name("K")
-    cart.fill_postal_code("22")
-    cart.click_continue_button()
-    cart.click_finish_button()
-    cart.verify_complete_header()
+    CartPage() \
+        .should_be_cart_opened() \
+        .go_to_checkout_step_one() \
+        .fill_checkout_information(first_name="Anna", last_name="K", postal_code="22") \
+        .go_to_checkout_step_two() \
+        .finish_checkout() \
+        .verify_complete_header()

@@ -26,8 +26,7 @@ class BasePage:
 
     def open_page(self, relative_url: str = "/") -> None:
         with allure.step(f"Open page: {relative_url}"):
-            browser.config.base_url = self.base_url
-            self.logger.info(f"Open {self.base_url}{relative_url}")
+            self.logger.info(f"Open {browser.config.base_url}{relative_url}")
             browser.open(relative_url)
 
     def open_url(self, absolute_url: str) -> None:

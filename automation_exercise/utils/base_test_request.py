@@ -9,26 +9,14 @@ T = TypeVar("T")
 
 class BaseTestRequests:
     def check_response(
-        self,
-        response_info: dict,
-        expected_http: int,
-        expected_business: int,
-        schema: dict | None = None,
-        model_cls: type[T] | None = None,
-        from_dict: Callable[[dict[str, Any]], T] | None = None,
+            self,
+            response_info: dict,
+            expected_http: int,
+            expected_business: int,
+            schema: dict | None = None,
+            model_cls: type[T] | None = None,
+            from_dict: Callable[[dict[str, Any]], T] | None = None,
     ) -> dict | T:
-        """
-        Единая точка проверки ответа:
-        - HTTP status
-        - нормализация response в dict (в т.ч. вложенный JSON в поле message)
-        - business responseCode
-        - JSON Schema
-        - десериализация в модель
-
-        Модель поддерживается в двух вариантах:
-        1) model_cls имеет classmethod from_dict(data) -> T
-        2) передан from_dict callable
-        """
         with step(f"Проверка HTTP статус-кода = {expected_http}"):
             assert response_info["status_code"] == expected_http, response_info
 
@@ -71,11 +59,11 @@ class BaseTestRequests:
             return model_cls.from_dict(body)
 
     def check_response_status_and_message_business_code(
-        self,
-        response_info: dict,
-        expected_http: int,
-        expected_business: int,
-        schema: dict | None = None,
+            self,
+            response_info: dict,
+            expected_http: int,
+            expected_business: int,
+            schema: dict | None = None,
     ) -> dict:
         return self.check_response(
             response_info=response_info,

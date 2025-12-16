@@ -11,11 +11,7 @@ from selene.support.shared import config
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
-DEFAULT_BROWSER_VERSION = "128.0"
-
-
-def pytest_addoption(parser):
-    parser.addoption("--browser_version", default=DEFAULT_BROWSER_VERSION)
+DEFAULT_BROWSER_VERSION = ""
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -55,7 +51,6 @@ def _attach_browser_logs():
 
 
 def _build_video_url(session_id: str) -> str | None:
-
     selenoid_ui = (os.getenv("SELENOID_UI") or "").rstrip("/")
     if selenoid_ui:
         return f"{selenoid_ui}/video/{session_id}.mp4"
@@ -113,34 +108,55 @@ def pytest_runtest_makereport(item, call):
     _attach_video()
 
 
-@pytest.fixture(scope="function", autouse=True)
-def browser_setup(request):
-    browser_version = request.config.getoption("browser_version") or DEFAULT_BROWSER_VERSION
-
-    config.timeout = 6.0
-    config.window_width = 1920
-    config.window_height = 1080
-    config.base_url = os.getenv("SAUCEDEMO_URL", "https://www.saucedemo.com")
-
+def _create_chrome_options(browser_version: str) -> Options:
     options = Options()
     options.set_capability("browserName", "chrome")
-    options.set_capability("browserVersion", browser_version)
+    if browser_version:
+        options.set_capability("browserVersion", browser_version)
+    options.set_capability("goog:loggingPrefs", {"browser": "ALL"})
+    options.set_capability("acceptInsecureCerts", True)
     options.set_capability(
         "selenoid:options",
         {"enableVNC": True, "enableVideo": True, "enableLog": True},
     )
-    options.set_capability("goog:loggingPrefs", {"browser": "ALL"})
-    options.set_capability("acceptInsecureCerts", True)
+    return options
+
+
+def _make_remote_driver(options: Options) -> webdriver.Remote:
+    url = (os.getenv("SELENOID_URL") or "").strip()
+    if not url:
+        raise RuntimeError("SELENOID_URL is required for RUN_MODE=selenoid")
+
+    if not url.startswith("http://") and not url.startswith("https://"):
+        url = "https://" + url
 
     login = os.getenv("SELENOID_LOGIN")
     password = os.getenv("SELENOID_PASS")
-    url = os.getenv("SELENOID_URL")
+    if login and password:
+        scheme, rest = url.split("://", 1)
+        url = f"{scheme}://{login}:{password}@{rest}"
 
-    command_executor = f"https://{login}:{password}@{url}"
+    return webdriver.Remote(command_executor=url, options=options)
 
-    driver = webdriver.Remote(command_executor=command_executor, options=options)
+
+@pytest.fixture(scope="function", autouse=True)
+def browser_setup():
+    run_mode = (os.getenv("RUN_MODE", "local") or "local").strip().lower()
+    browser_version = (os.getenv("BROWSER_VERSION") or DEFAULT_BROWSER_VERSION).strip()
+
+    config.timeout = float(os.getenv("UI_TIMEOUT", "6.0"))
+    config.window_width = int(os.getenv("UI_WIDTH", "1920"))
+    config.window_height = int(os.getenv("UI_HEIGHT", "1080"))
+    config.base_url = os.getenv("SAUCEDEMO_URL", "https://www.saucedemo.com").rstrip("/")
+
+    options = _create_chrome_options(browser_version)
+
+    if run_mode == "selenoid":
+        driver = _make_remote_driver(options)
+    else:
+        driver = webdriver.Chrome(options=options)
+        driver.set_window_size(config.window_width, config.window_height)
+
     browser.config.driver = driver
-
     yield browser
-
     browser.quit()

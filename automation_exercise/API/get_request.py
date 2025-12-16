@@ -8,5 +8,4 @@ class GetAPI:
         self.client = client
 
     def all_brand_list(self) -> dict:
-        # /brandsList возвращает список брендов.
         return self.client.request("GET", "/brandsList")
