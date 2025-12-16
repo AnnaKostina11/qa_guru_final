@@ -16,27 +16,24 @@ class TestCatalogSorting:
     @allure.label("layer", "ui")
     @allure.severity(Severity.CRITICAL)
     @allure.title("Сортировка товаров на главной странице")
-    def test_sorting_products(self, browser_setup):
-        AuthorizationPage() \
-            .open_authorization_page() \
-            .fill_username(os.getenv("SAUCEDEMO_LOGIN")) \
-            .fill_password(os.getenv("SAUCEDEMO_PASSWORD")) \
-            .submit()
-
-        inventory = InventoryPage().should_be_opened()
+    def test_sorting_products(self, logged_in):
+        inventory = logged_in
 
         initial_names = inventory.get_product_names()
+        expected_az = sorted(initial_names)
+        expected_za = sorted(initial_names, reverse=True)
 
         inventory.select_sort_option("az")
-        assert inventory.get_product_names() == sorted(initial_names)
+        assert inventory.get_product_names() == expected_az
 
         inventory.select_sort_option("za")
-        assert inventory.get_product_names() == sorted(initial_names, reverse=True)
+        assert inventory.get_product_names() == expected_za
 
         inventory.select_sort_option("lohi")
-        prices_lohi = inventory.get_product_prices()
-        assert prices_lohi == sorted(prices_lohi)
+        actual_lohi = inventory.get_product_prices()
+        assert actual_lohi == sorted(actual_lohi)
 
         inventory.select_sort_option("hilo")
-        prices_hilo = inventory.get_product_prices()
-        assert prices_hilo == sorted(prices_hilo, reverse=True)
+        actual_hilo = inventory.get_product_prices()
+        assert actual_hilo == sorted(actual_hilo, reverse=True)
+

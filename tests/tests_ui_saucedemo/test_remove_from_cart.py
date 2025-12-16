@@ -16,12 +16,8 @@ class TestCartRemove:
     @allure.label("layer", "ui")
     @allure.severity(Severity.CRITICAL)
     @allure.title("Удаление товара из корзины.")
-    def test_remove_from_cart(self, browser_setup):
-        AuthorizationPage() \
-            .open_authorization_page() \
-            .fill_username(os.getenv("SAUCEDEMO_LOGIN")) \
-            .fill_password(os.getenv("SAUCEDEMO_PASSWORD")) \
-            .submit()
+    def test_remove_from_cart(self, browser_setup, logged_in):
+        inventory = logged_in
 
         inventory = InventoryPage().should_be_opened()
         inventory.add_product_to_shopping_cart_by_text("Sauce Labs Backpack")

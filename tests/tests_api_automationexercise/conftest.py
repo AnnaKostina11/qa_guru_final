@@ -16,6 +16,8 @@ def load_env():
 
 @pytest.fixture(scope="session", autouse=True)
 def configure_console_logging():
+    # Требование: уровень логирования, дата, время, код ответа, client url
+    # Формат задаём здесь, а код/URL пишет APIClient (logger.info)
     logging.basicConfig(
         level=os.getenv("LOG_LEVEL", "INFO"),
         format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
@@ -78,8 +80,10 @@ def create_user():
 
 @pytest.fixture(scope="function")
 def create_user_account(api_application, create_user):
+    # гарантируем чистый старт
     api_application.delete.delete_account(create_user.email, create_user.password)
     yield api_application.post.create_account(create_user)
+    # чистим после теста
     api_application.delete.delete_account(create_user.email, create_user.password)
 
 

@@ -17,12 +17,8 @@ class TestCheckout:
     @allure.label("layer", "ui")
     @allure.severity(Severity.CRITICAL)
     @allure.title("Оформление заказа.")
-    def test_buy_to_product(self, browser_setup):
-        AuthorizationPage() \
-            .open_authorization_page() \
-            .fill_username(os.getenv("SAUCEDEMO_LOGIN")) \
-            .fill_password(os.getenv("SAUCEDEMO_PASSWORD")) \
-            .submit()
+    def test_buy_to_product(self, browser_setup, logged_in):
+        inventory = logged_in
 
         inventory = InventoryPage().should_be_opened()
         inventory.add_product_to_shopping_cart_by_text("Sauce Labs Bike Light")
