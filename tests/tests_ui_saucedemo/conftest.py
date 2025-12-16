@@ -80,7 +80,6 @@ def _attach_video():
     except Exception:
         pass
 
-    # Если видео доступно из CI — скачаем и приложим mp4
     try:
         target = Path("artifacts") / f"{session_id}.mp4"
         target.parent.mkdir(parents=True, exist_ok=True)
@@ -111,7 +110,6 @@ def pytest_runtest_makereport(item, call):
 def _create_chrome_options(browser_version: str) -> Options:
     options = Options()
 
-    # W3C capabilities
     options.set_capability("browserName", "chrome")
     if browser_version:
         options.set_capability("browserVersion", browser_version)
@@ -119,7 +117,7 @@ def _create_chrome_options(browser_version: str) -> Options:
     options.set_capability("goog:loggingPrefs", {"browser": "ALL"})
     options.set_capability("acceptInsecureCerts", True)
 
-    # Отключаем всплывашки менеджера паролей и “Смените пароль”
+    # Убираем попапы Chrome Password Manager / “Change password”
     options.add_experimental_option(
         "prefs",
         {
@@ -129,7 +127,6 @@ def _create_chrome_options(browser_version: str) -> Options:
         },
     )
 
-    # Небольшие “анти-помехи”
     options.add_argument("--disable-notifications")
     options.add_argument("--disable-infobars")
 
@@ -139,7 +136,7 @@ def _create_chrome_options(browser_version: str) -> Options:
 def _make_remote_driver(options: Options) -> webdriver.Remote:
     url = (os.getenv("SELENOID_URL") or "").strip()
     if not url:
-        raise RuntimeError("SELENOID_URL is required for RUN_MODE=selenoid")
+        raise RuntimeError("SELENOID_URL is required for remote run")
 
     if not url.startswith("http://") and not url.startswith("https://"):
         url = "http://" + url
@@ -150,11 +147,10 @@ def _make_remote_driver(options: Options) -> webdriver.Remote:
         scheme, rest = url.split("://", 1)
         url = f"{scheme}://{login}:{password}@{rest}"
 
-    # Полезные флаги для Chrome в контейнере
+    # Для контейнера
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
 
-    # Selenoid capabilities
     options.set_capability(
         "selenoid:options",
         {"enableVNC": True, "enableVideo": True, "enableLog": True},
@@ -165,9 +161,15 @@ def _make_remote_driver(options: Options) -> webdriver.Remote:
 
 @pytest.fixture(scope="function", autouse=True)
 def browser_setup():
-    run_mode = (os.getenv("RUN_MODE", "local") or "local").strip().lower()
-    browser_version = (os.getenv("BROWSER_VERSION") or DEFAULT_BROWSER_VERSION).strip()
+    # Надёжный выбор режима:
+    # 1) если RUN_MODE=selenoid -> remote
+    # 2) иначе, если SELENOID_URL задан -> тоже remote (чтобы CI не запускал локальный Chrome)
+    run_mode = (os.getenv("RUN_MODE") or "").strip().lower()
+    selenoid_url = (os.getenv("SELENOID_URL") or "").strip()
 
+    use_remote = (run_mode == "selenoid") or bool(selenoid_url)
+
+    browser_version = (os.getenv("BROWSER_VERSION") or DEFAULT_BROWSER_VERSION).strip()
     browser.config.timeout = float(os.getenv("UI_TIMEOUT", "6.0"))
     browser.config.base_url = os.getenv("SAUCEDEMO_URL", "https://www.saucedemo.com").rstrip("/")
 
@@ -176,7 +178,7 @@ def browser_setup():
 
     options = _create_chrome_options(browser_version)
 
-    if run_mode == "selenoid":
+    if use_remote:
         driver = _make_remote_driver(options)
     else:
         driver = webdriver.Chrome(options=options)
