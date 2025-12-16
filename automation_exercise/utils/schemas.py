@@ -36,3 +36,70 @@ MESSAGE_ONLY_SCHEMA = {
     },
     "additionalProperties": True,
 }
+
+CREATE_ACCOUNT_REQUEST_SCHEMA = {
+    "type": "object",
+    "required": [
+        "name",
+        "email",
+        "password",
+        "title",
+        "birth_date",
+        "birth_month",
+        "birth_year",
+        "firstname",
+        "lastname",
+        "company",
+        "address1",
+        "address2",
+        "country",
+        "zipcode",
+        "city",
+        "state",
+        "mobile_number",
+    ],
+    "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "email": {"type": "string", "minLength": 3},
+        "password": {"type": "string", "minLength": 1},
+        "title": {"type": "string", "minLength": 1},
+        "birth_date": {"type": ["string", "integer"]},
+        "birth_month": {"type": ["string", "integer"]},
+        "birth_year": {"type": ["string", "integer"]},
+        "firstname": {"type": "string", "minLength": 1},
+        "lastname": {"type": "string", "minLength": 1},
+        "company": {"type": "string"},
+        "address1": {"type": "string", "minLength": 1},
+        "address2": {"type": "string"},
+        "country": {"type": "string", "minLength": 1},
+        "zipcode": {"type": "string", "minLength": 1},
+        "city": {"type": "string", "minLength": 1},
+        "state": {"type": "string", "minLength": 1},
+        "mobile_number": {"type": "string", "minLength": 1},
+    },
+    "additionalProperties": True,
+}
+
+VERIFY_LOGIN_REQUEST_SCHEMA = {
+    "type": "object",
+    "required": ["email", "password"],
+    "properties": {
+        "email": {"type": "string", "minLength": 3},
+        "password": {"type": "string", "minLength": 1},
+    },
+    "additionalProperties": True,
+}
+
+DELETE_ACCOUNT_REQUEST_SCHEMA = VERIFY_LOGIN_REQUEST_SCHEMA
+
+UPDATE_ACCOUNT_REQUEST_SCHEMA = {
+    "type": "object",
+    "required": ["firstname", "lastname", "email", "password"],
+    "properties": {
+        "firstname": {"type": "string", "minLength": 1},
+        "lastname": {"type": "string", "minLength": 1},
+        "email": {"type": "string", "minLength": 3},
+        "password": {"type": "string", "minLength": 1},
+    },
+    "additionalProperties": True,
+}

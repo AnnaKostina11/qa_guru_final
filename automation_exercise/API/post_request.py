@@ -1,14 +1,18 @@
+from jsonschema import validate
+
 from automation_exercise.API.client import APIClient
+from automation_exercise.utils.attach import attach_json
+from automation_exercise.utils.schemas import (
+    CREATE_ACCOUNT_REQUEST_SCHEMA,
+    VERIFY_LOGIN_REQUEST_SCHEMA,
+)
 
 
 class PostAPI:
-    # Группа POST-эндпоинтов.
-
     def __init__(self, client: APIClient) -> None:
         self.client = client
 
     def create_account(self, user) -> dict:
-        # Формируем body для /createAccount из модели User.
         data = {
             "name": user.nick_name,
             "email": user.email,
@@ -29,8 +33,13 @@ class PostAPI:
             "mobile_number": user.mobile_number,
         }
 
+        attach_json("request.validated_schema", CREATE_ACCOUNT_REQUEST_SCHEMA)
+        validate(instance=data, schema=CREATE_ACCOUNT_REQUEST_SCHEMA)
         return self.client.request("POST", "/createAccount", data=data)
 
     def verify_login(self, user) -> dict:
         data = {"email": user.email, "password": user.password}
+
+        attach_json("request.validated_schema", VERIFY_LOGIN_REQUEST_SCHEMA)
+        validate(instance=data, schema=VERIFY_LOGIN_REQUEST_SCHEMA)
         return self.client.request("POST", "/verifyLogin", data=data)

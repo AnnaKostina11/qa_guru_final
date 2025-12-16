@@ -1,10 +1,8 @@
 pytest==8.4.2
 selene==2.0.0rc9
+selenium==4.38.0
 requests==2.32.4
 jsonschema==4.20.0
 allure-pytest==2.15.0
+allure-python-commons==2.15.0
 python-dotenv~=1.1.1
-selenium==4.38.0
-
-config~=0.5.1
-allure-python-commons~=2.15.0

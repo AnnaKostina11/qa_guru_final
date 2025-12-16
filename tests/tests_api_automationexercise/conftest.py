@@ -1,7 +1,9 @@
+import logging
 import os
 
 import pytest
 from dotenv import load_dotenv
+from selene.support.shared import browser
 
 from automation_exercise.data.user import User, UserCard
 from automation_exercise.utils.static_values import Country, Months
@@ -12,9 +14,27 @@ def load_env():
     load_dotenv()
 
 
+@pytest.fixture(scope="session", autouse=True)
+def configure_console_logging():
+    logging.basicConfig(
+        level=os.getenv("LOG_LEVEL", "INFO"),
+        format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
+
+
+@pytest.fixture(scope="session", autouse=True)
+def set_api_base_url():
+    # Требование: именно browser.config.base_url
+    browser.config.base_url = os.getenv(
+        "AUTOMATIONEXERCISE_API_URL",
+        "https://www.automationexercise.com/api",
+    ).rstrip("/")
+
+
 @pytest.fixture(scope="session")
 def api_base_url() -> str:
-    return os.getenv("AUTOMATIONEXERCISE_API_URL", "https://www.automationexercise.com/api").rstrip("/")
+    return browser.config.base_url
 
 
 @pytest.fixture(scope="function")

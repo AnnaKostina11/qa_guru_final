@@ -7,7 +7,6 @@ import requests
 from allure_commons.types import AttachmentType
 from dotenv import load_dotenv
 from selene import browser
-from selene.support.shared import config
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
@@ -144,10 +143,15 @@ def browser_setup():
     run_mode = (os.getenv("RUN_MODE", "local") or "local").strip().lower()
     browser_version = (os.getenv("BROWSER_VERSION") or DEFAULT_BROWSER_VERSION).strip()
 
-    config.timeout = float(os.getenv("UI_TIMEOUT", "6.0"))
-    config.window_width = int(os.getenv("UI_WIDTH", "1920"))
-    config.window_height = int(os.getenv("UI_HEIGHT", "1080"))
-    config.base_url = os.getenv("SAUCEDEMO_URL", "https://www.saucedemo.com").rstrip("/")
+    browser.config.timeout = float(os.getenv("UI_TIMEOUT", "6.0"))
+
+    # Базовый URL - browser.config.base_url
+    browser.config.base_url = os.getenv("SAUCEDEMO_URL", "https://www.saucedemo.com").rstrip("/")
+
+    browser.config.driver_name = (os.getenv("BROWSER_NAME", "chrome") or "chrome").strip().lower()
+
+    width = int(os.getenv("UI_WIDTH", "1920"))
+    height = int(os.getenv("UI_HEIGHT", "1080"))
 
     options = _create_chrome_options(browser_version)
 
@@ -155,8 +159,11 @@ def browser_setup():
         driver = _make_remote_driver(options)
     else:
         driver = webdriver.Chrome(options=options)
-        driver.set_window_size(config.window_width, config.window_height)
 
     browser.config.driver = driver
+
+    browser.driver.set_window_size(width, height)
+
     yield browser
+
     browser.quit()
