@@ -138,16 +138,18 @@ def _make_remote_driver(options: Options) -> webdriver.Remote:
     if not url:
         raise RuntimeError("SELENOID_URL is required for remote run")
 
+    # нормализуем схему
     if not url.startswith("http://") and not url.startswith("https://"):
         url = "http://" + url
 
-    login = os.getenv("SELENOID_LOGIN")
-    password = os.getenv("SELENOID_PASS")
+    # если креды заданы отдельными переменными — добавим basic auth в url
+    login = (os.getenv("SELENOID_LOGIN") or "").strip()
+    password = (os.getenv("SELENOID_PASS") or "").strip()
     if login and password:
         scheme, rest = url.split("://", 1)
         url = f"{scheme}://{login}:{password}@{rest}"
 
-    # Для контейнера
+    # для контейнера
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
 
@@ -157,6 +159,8 @@ def _make_remote_driver(options: Options) -> webdriver.Remote:
     )
 
     return webdriver.Remote(command_executor=url, options=options)
+
+
 
 
 @pytest.fixture(scope="function", autouse=True)
