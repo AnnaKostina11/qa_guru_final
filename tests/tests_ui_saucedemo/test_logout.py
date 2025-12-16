@@ -25,7 +25,6 @@ class TestAuthorizationLogout:
         )
 
         auth_page.logout()
-
         auth_page.verify_url()
         auth_page.verify_page_title()
         auth_page.verify_login_logo()

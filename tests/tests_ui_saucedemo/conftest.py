@@ -60,8 +60,7 @@ def _build_video_url(session_id: str) -> str | None:
 
     raw = raw.replace("/wd/hub", "").rstrip("/")
     if not raw.startswith("http://") and not raw.startswith("https://"):
-        raw = "https://" + raw
-
+        raw = "http://" + raw
     return f"{raw}/video/{session_id}.mp4"
 
 
@@ -110,15 +109,26 @@ def pytest_runtest_makereport(item, call):
 def _create_chrome_options(browser_version: str) -> Options:
     options = Options()
     options.set_capability("browserName", "chrome")
+
     if browser_version:
         options.set_capability("browserVersion", browser_version)
+
     options.set_capability("goog:loggingPrefs", {"browser": "ALL"})
     options.set_capability("acceptInsecureCerts", True)
-    options.set_capability(
-        "selenoid:options",
-        {"enableVNC": True, "enableVideo": True, "enableLog": True},
-    )
+
+    # Отключаем всплывашки сохранения пароля/автологина
+    prefs = {
+        "credentials_enable_service": False,
+        "profile.password_manager_enabled": False,
+        "profile.password_manager_leak_detection": False,  # <-- убирает “Смените пароль”
+    }
+    options.add_experimental_option("prefs", prefs)
+    # (не обязательно, но часто помогает в автотестах)
+    options.add_argument("--disable-notifications")
+    options.add_argument("--disable-infobars")
+
     return options
+
 
 
 def _make_remote_driver(options: Options) -> webdriver.Remote:
@@ -127,13 +137,18 @@ def _make_remote_driver(options: Options) -> webdriver.Remote:
         raise RuntimeError("SELENOID_URL is required for RUN_MODE=selenoid")
 
     if not url.startswith("http://") and not url.startswith("https://"):
-        url = "https://" + url
+        url = "http://" + url
 
     login = os.getenv("SELENOID_LOGIN")
     password = os.getenv("SELENOID_PASS")
     if login and password:
         scheme, rest = url.split("://", 1)
         url = f"{scheme}://{login}:{password}@{rest}"
+
+    options.set_capability(
+        "selenoid:options",
+        {"enableVNC": True, "enableVideo": True, "enableLog": True},
+    )
 
     return webdriver.Remote(command_executor=url, options=options)
 
@@ -144,11 +159,7 @@ def browser_setup():
     browser_version = (os.getenv("BROWSER_VERSION") or DEFAULT_BROWSER_VERSION).strip()
 
     browser.config.timeout = float(os.getenv("UI_TIMEOUT", "6.0"))
-
-    # Базовый URL - browser.config.base_url
     browser.config.base_url = os.getenv("SAUCEDEMO_URL", "https://www.saucedemo.com").rstrip("/")
-
-    browser.config.driver_name = (os.getenv("BROWSER_NAME", "chrome") or "chrome").strip().lower()
 
     width = int(os.getenv("UI_WIDTH", "1920"))
     height = int(os.getenv("UI_HEIGHT", "1080"))
@@ -161,7 +172,6 @@ def browser_setup():
         driver = webdriver.Chrome(options=options)
 
     browser.config.driver = driver
-
     browser.driver.set_window_size(width, height)
 
     yield browser
