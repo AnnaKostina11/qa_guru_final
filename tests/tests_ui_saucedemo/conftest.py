@@ -61,6 +61,7 @@ def _build_video_url(session_id: str) -> str | None:
     raw = raw.replace("/wd/hub", "").rstrip("/")
     if not raw.startswith("http://") and not raw.startswith("https://"):
         raw = "http://" + raw
+
     return f"{raw}/video/{session_id}.mp4"
 
 
@@ -79,6 +80,7 @@ def _attach_video():
     except Exception:
         pass
 
+    # Если видео доступно из CI — скачаем и приложим mp4
     try:
         target = Path("artifacts") / f"{session_id}.mp4"
         target.parent.mkdir(parents=True, exist_ok=True)
@@ -108,27 +110,30 @@ def pytest_runtest_makereport(item, call):
 
 def _create_chrome_options(browser_version: str) -> Options:
     options = Options()
-    options.set_capability("browserName", "chrome")
 
+    # W3C capabilities
+    options.set_capability("browserName", "chrome")
     if browser_version:
         options.set_capability("browserVersion", browser_version)
 
     options.set_capability("goog:loggingPrefs", {"browser": "ALL"})
     options.set_capability("acceptInsecureCerts", True)
 
-    # Отключаем всплывашки сохранения пароля/автологина
-    prefs = {
-        "credentials_enable_service": False,
-        "profile.password_manager_enabled": False,
-        "profile.password_manager_leak_detection": False,  # <-- убирает “Смените пароль”
-    }
-    options.add_experimental_option("prefs", prefs)
-    # (не обязательно, но часто помогает в автотестах)
+    # Отключаем всплывашки менеджера паролей и “Смените пароль”
+    options.add_experimental_option(
+        "prefs",
+        {
+            "credentials_enable_service": False,
+            "profile.password_manager_enabled": False,
+            "profile.password_manager_leak_detection": False,
+        },
+    )
+
+    # Небольшие “анти-помехи”
     options.add_argument("--disable-notifications")
     options.add_argument("--disable-infobars")
 
     return options
-
 
 
 def _make_remote_driver(options: Options) -> webdriver.Remote:
@@ -145,6 +150,11 @@ def _make_remote_driver(options: Options) -> webdriver.Remote:
         scheme, rest = url.split("://", 1)
         url = f"{scheme}://{login}:{password}@{rest}"
 
+    # Полезные флаги для Chrome в контейнере
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+
+    # Selenoid capabilities
     options.set_capability(
         "selenoid:options",
         {"enableVNC": True, "enableVideo": True, "enableLog": True},
