@@ -133,32 +133,36 @@ def _create_chrome_options(browser_version: str) -> Options:
     return options
 
 
+from selenium.webdriver.remote.client_config import ClientConfig
+from selenium.webdriver.common.proxy import Proxy
+
+
 def _make_remote_driver(options: Options) -> webdriver.Remote:
     url = (os.getenv("SELENOID_URL") or "").strip()
     if not url:
         raise RuntimeError("SELENOID_URL is required for remote run")
 
-    # нормализуем схему
     if not url.startswith("http://") and not url.startswith("https://"):
         url = "http://" + url
 
-    # если креды заданы отдельными переменными — добавим basic auth в url
     login = (os.getenv("SELENOID_LOGIN") or "").strip()
     password = (os.getenv("SELENOID_PASS") or "").strip()
-    if login and password:
-        scheme, rest = url.split("://", 1)
-        url = f"{scheme}://{login}:{password}@{rest}"
 
-    # для контейнера
+    # ВАЖНО: аутентификация не через user:pass@url, а через ClientConfig
+    client_config = ClientConfig(remote_server_addr=url)
+    if login and password:
+        client_config.username = login
+        client_config.password = password
+
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
-
     options.set_capability(
         "selenoid:options",
         {"enableVNC": True, "enableVideo": True, "enableLog": True},
     )
 
-    return webdriver.Remote(command_executor=url, options=options)
+    return webdriver.Remote(options=options, client_config=client_config)
+
 
 
 
