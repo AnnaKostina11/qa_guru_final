@@ -18,14 +18,8 @@ def load_env():
 
 
 def _video_url(session_id: str) -> str:
-    selenoid_ui = (os.getenv("SELENOID_UI") or "").rstrip("/")
-    if selenoid_ui:
-        return f"{selenoid_ui}/video/{session_id}.mp4"
-
-    base = (os.getenv("SELENOID_URL") or "").strip()
-    base = base.replace("/wd/hub", "").rstrip("/")
-    if not base.startswith(("http://", "https://")):
-        base = "http://" + base
+    base = os.getenv("SELENOID_URL")
+    base = base.replace("/wd/hub", "")
     return f"{base}/video/{session_id}.mp4"
 
 
@@ -81,9 +75,8 @@ def browser_setup():
     options = Options()
     options.set_capability("browserName", "chrome")
 
-    browser_version = (os.getenv("BROWSER_VERSION") or "").strip()
-    if browser_version:
-        options.set_capability("browserVersion", browser_version)
+    browser_version = os.getenv("BROWSER_VERSION")
+    options.set_capability("browserVersion", browser_version)
 
     options.set_capability("goog:loggingPrefs", {"browser": "ALL"})
     options.set_capability("acceptInsecureCerts", True)
@@ -99,14 +92,12 @@ def browser_setup():
     options.add_argument("--disable-infobars")
 
     if use_remote:
-        url = (os.getenv("SELENOID_URL") or "").strip()
-        if not url.startswith(("http://", "https://")):
-            url = "http://" + url
+        url = os.getenv("SELENOID_URL")
 
         client_config = ClientConfig(remote_server_addr=url)
 
-        login = (os.getenv("SELENOID_LOGIN") or "").strip()
-        password = (os.getenv("SELENOID_PASS") or "").strip()
+        login = os.getenv("SELENOID_LOGIN")
+        password = os.getenv("SELENOID_PASS")
         if login and password:
             client_config.username = login
             client_config.password = password
