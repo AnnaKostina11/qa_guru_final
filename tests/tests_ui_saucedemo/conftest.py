@@ -11,7 +11,6 @@ from selenium.webdriver.remote.client_config import ClientConfig
 from pages.authorization_page import AuthorizationPage
 from pages.inventory_page import InventoryPage
 
-
 @pytest.fixture(scope="session", autouse=True)
 def load_env():
     load_dotenv()
@@ -64,8 +63,8 @@ def logged_in(browser_setup):
 
 @pytest.fixture(scope="function", autouse=True)
 def browser_setup():
-    run_mode = (os.getenv("RUN_MODE") or "local").strip().lower()
-    use_remote = run_mode in {"remote", "selenoid"}
+    run_mode = os.getenv("RUN_MODE")
+    use_remote = run_mode in {"remote"}
 
     browser.config.timeout = float(os.getenv("UI_TIMEOUT", "6.0"))
     browser.config.base_url = os.getenv("SAUCEDEMO_URL", "https://www.saucedemo.com")
