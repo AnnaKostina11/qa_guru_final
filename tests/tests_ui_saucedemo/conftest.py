@@ -91,7 +91,7 @@ def browser_setup():
     options.add_argument("--disable-infobars")
 
     if use_remote:
-        url = os.getenv("SELENOID_URL")
+        url = "https://selenoid.autotests.cloud/wd/hub"
 
         client_config = ClientConfig(remote_server_addr=url)
 
