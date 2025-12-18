@@ -64,8 +64,7 @@ def logged_in(browser_setup):
 @pytest.fixture(scope="function", autouse=True)
 def browser_setup():
     run_mode = os.getenv("RUN_MODE")
-    #use_remote = run_mode in {"remote"}
-    use_remote = True
+    use_remote = run_mode in {"remote"}
     browser.config.timeout = float(os.getenv("UI_TIMEOUT", "6.0"))
     browser.config.base_url = os.getenv("SAUCEDEMO_URL", "https://www.saucedemo.com")
     width = int(os.getenv("UI_WIDTH", "1920"))
@@ -93,22 +92,11 @@ def browser_setup():
     if use_remote:
         url = os.getenv("SELENOID_URL")
 
-        client_config = ClientConfig(remote_server_addr=url)
+        driver = webdriver.Remote(command_executor=url, options=options)
 
         login = os.getenv("SELENOID_LOGIN")
         password = os.getenv("SELENOID_PASS")
-        if login and password:
-            client_config.username = login
-            client_config.password = password
-
-        options.add_argument("--no-sandbox")
-        options.add_argument("--disable-dev-shm-usage")
-        options.set_capability(
-            "selenoid:options",
-            {"enableVNC": True, "enableVideo": True, "enableLog": True},
-        )
-
-        driver = webdriver.Remote(options=options, client_config=client_config)
+        driver.command_executor._url = f"https://{login}:{password}@{url.replace('https://', '')}"
     else:
         driver = webdriver.Chrome(options=options)
 
