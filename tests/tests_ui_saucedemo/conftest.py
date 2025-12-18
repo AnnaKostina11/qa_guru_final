@@ -64,8 +64,8 @@ def logged_in(browser_setup):
 @pytest.fixture(scope="function", autouse=True)
 def browser_setup():
     run_mode = os.getenv("RUN_MODE")
-    use_remote = run_mode in {"remote"}
-
+    #use_remote = run_mode in {"remote"}
+    use_remote = True
     browser.config.timeout = float(os.getenv("UI_TIMEOUT", "6.0"))
     browser.config.base_url = os.getenv("SAUCEDEMO_URL", "https://www.saucedemo.com")
     width = int(os.getenv("UI_WIDTH", "1920"))
@@ -91,7 +91,7 @@ def browser_setup():
     options.add_argument("--disable-infobars")
 
     if use_remote:
-        url = "https://selenoid.autotests.cloud/wd/hub"
+        url = os.getenv("SELENOID_URL")
 
         client_config = ClientConfig(remote_server_addr=url)
 
