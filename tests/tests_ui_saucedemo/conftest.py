@@ -63,7 +63,6 @@ def logged_in(browser_setup):
 
 @pytest.fixture(scope="function", autouse=True)
 def browser_setup():
-    load_dotenv()
     run_mode = os.getenv("RUN_MODE")
     use_remote = run_mode in {"remote"}
 
