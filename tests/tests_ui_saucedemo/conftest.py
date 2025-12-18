@@ -68,7 +68,7 @@ def browser_setup():
     use_remote = run_mode in {"remote", "selenoid"}
 
     browser.config.timeout = float(os.getenv("UI_TIMEOUT", "6.0"))
-    browser.config.base_url = os.getenv("SAUCEDEMO_URL", "https://www.saucedemo.com").rstrip("/")
+    browser.config.base_url = os.getenv("SAUCEDEMO_URL", "https://www.saucedemo.com")
     width = int(os.getenv("UI_WIDTH", "1920"))
     height = int(os.getenv("UI_HEIGHT", "1080"))
 
