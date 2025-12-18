@@ -92,11 +92,15 @@ def browser_setup():
     if use_remote:
         url = os.getenv("SELENOID_URL")
 
-        driver = webdriver.Remote(command_executor=url, options=options)
-
         login = os.getenv("SELENOID_LOGIN")
         password = os.getenv("SELENOID_PASS")
-        driver.command_executor._url = f"https://{login}:{password}@{url.replace('https://', '')}"
+        auth_url = f"https://{login}:{password}@{url}"
+        options.set_capability("selenoid:options", {
+            "enableVNC": True,
+            "enableVideo": True,
+            "enableLog": True
+        })
+        driver = webdriver.Remote(command_executor=auth_url, options=options)
     else:
         driver = webdriver.Chrome(options=options)
 
