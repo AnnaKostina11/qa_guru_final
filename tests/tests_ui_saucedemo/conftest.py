@@ -19,7 +19,7 @@ def load_env():
 def _video_url(session_id: str) -> str:
     base = os.getenv("SELENOID_URL")
     base = base.replace("/wd/hub", "")
-    return f"{base}/video/{session_id}.mp4"
+    return f"https://{base}/video/{session_id}.mp4"
 
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
