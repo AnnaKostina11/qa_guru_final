@@ -48,7 +48,7 @@ def pytest_runtest_makereport(item, call):
             attachment_type=AttachmentType.TEXT,
         )
     except AttributeError:
-        print("Browser logs unavailable")
+        pass
 
     allure.attach(
         _video_url(browser.driver.session_id),
