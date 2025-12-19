@@ -38,52 +38,39 @@
 1) Установить зависимости:
 pip install -r requirements.txt
 
-text
-
 2) Запуск всех тестов:
-pytest -v
-
-text
+pytest
 
 3) Запуск только UI:
-pytest -v tests/tests_UI_saucedemo
-
-text
+pytest tests/tests_UI_saucedemo
 
 4) Запуск только API:
-pytest -v tests/tests_API_automationexercise
-
-text
+pytest tests/tests_API_automationexercise
 
 5) Генерация Allure-результатов:
 pytest --alluredir=allure-results --clean-alluredir
 
-text
-
 6) Просмотр Allure локально:
 allure serve allure-results
 
-text
-
 ## CI: Jenkins
 
-- Jenkins Job: **TODO: вставить ссылку на Job**
+- Jenkins Job: **https://jenkins.autotests.cloud/job/22_final_project_kostina/**
   - 
 - Скриншот страницы Job:
   - `resources/jenkins_job.png`
   
 
 ### Allure report в Jenkins
-- Allure Report (build artifact / link): **TODO: вставить ссылку на Allure Report в Jenkins**
+- Allure Report (build artifact / link): **https://jenkins.autotests.cloud/job/22_final_project_kostina/allure/**
   - 
 - Скриншот Allure Report:
   - `resources/allure_report.png`
-  -
 
 ## Allure TestOps (опционально)
 
-- Allure TestOps Project: **TODO: вставить ссылку**
-- Launch / Test Run: **TODO: вставить ссылку на прогон**
+- Allure TestOps Project: **https://allure.autotests.cloud/project/5050/launches**
+- Launch / Test Run: **https://allure.autotests.cloud/launch/50411**
 
 ## Уведомления в Telegram (опционально)
 
