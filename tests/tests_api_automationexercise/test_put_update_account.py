@@ -8,7 +8,7 @@ from automation_exercise.utils.static_values import StatusMessage
 
 
 @allure.epic("API")
-@allure.feature("put")
+@allure.feature("Put")
 @allure.story("Update account")
 class TestUpdateUserAccount(BaseTestRequests):
 

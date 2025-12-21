@@ -62,11 +62,11 @@
 
 ## CI: Jenkins
 
-Jenkins Job: **https://jenkins.autotests.cloud/job/22_final_project_kostina/**
+Jenkins Project: **https://jenkins.autotests.cloud/job/22_final_project_kostina/**
 
-Скриншот страницы Job:
+Скриншот страницы Project:
 
-![Скриншот страницы Jenkins Job:](/resources/jenkins_job.png)
+![Скриншот страницы Jenkins Project:](/resources/jenkins_project.png)
 
 ### Allure report в Jenkins
 
@@ -78,8 +78,11 @@ Allure Report: **https://jenkins.autotests.cloud/job/22_final_project_kostina/al
 
 ## Allure TestOps
 
-- Test cases: **https://allure.autotests.cloud/project/5050/test-cases**
-- Dashboards: **https://allure.autotests.cloud/project/5050/dashboards**
+Test cases: **https://allure.autotests.cloud/project/5050/test-cases**
+
+Dashboards: **https://allure.autotests.cloud/project/5050/dashboards**
+
+![Скриншот Allure TestOps](/resources/testops_dashboard.png)
 
 ## Уведомления в Telegram
 
