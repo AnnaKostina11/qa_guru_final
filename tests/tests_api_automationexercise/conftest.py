@@ -14,6 +14,7 @@ from automation_exercise.utils.static_values import Country, Months
 def load_env():
     load_dotenv()
 
+
 # Глобальная настройка форматирования логов для всех модулей проекта
 @pytest.fixture(scope="session", autouse=True)
 def configure_console_logging():
@@ -22,6 +23,7 @@ def configure_console_logging():
         format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
         datefmt="-%Y-%m-%d %H:%M:%S",
     )
+
 
 # Устанавливаем базовый URL API в browser.config.base_url для единой точки конфигурации
 @pytest.fixture(scope="session", autouse=True)

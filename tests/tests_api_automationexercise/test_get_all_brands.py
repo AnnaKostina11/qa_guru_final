@@ -6,14 +6,14 @@ from automation_exercise.utils.base_test_request import BaseTestRequests
 from automation_exercise.utils.schemas import BRANDS_LIST_SCHEMA
 
 
+@allure.epic("API")
+@allure.feature("Get")
+@allure.story("Get all brands")
 class TestAllBrands(BaseTestRequests):
 
-    @allure.id("04_GET_REQUEST")
-    @allure.tag("API", "GET")
-    @allure.severity(Severity.NORMAL)
-    @allure.parent_suite("API")
-    @allure.suite("GET")
-    @allure.link("https://www.automationexercise.com", name="Testing API")
+    @allure.tag("API", "REGRESS")
+    @allure.label("layer", "api")
+    @allure.severity(Severity.CRITICAL)
     @allure.title("Получение списка брендов.")
     def test_valid_status_code(self, api_application):
         with allure.step("Отправить GET-запрос на получение списка брендов"):

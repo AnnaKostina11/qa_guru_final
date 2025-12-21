@@ -7,14 +7,14 @@ from automation_exercise.utils.schemas import MESSAGE_ONLY_SCHEMA
 from automation_exercise.utils.static_values import StatusMessage
 
 
+@allure.epic("API")
+@allure.feature("Delete")
+@allure.story("Delete account")
 class TestUserAccount(BaseTestRequests):
 
-    @allure.id("05_DELETE_REQUEST")
-    @allure.tag("API", "DELETE")
-    @allure.severity(Severity.MINOR)
-    @allure.parent_suite("API")
-    @allure.suite("DELETE")
-    @allure.link("https://www.automationexercise.com", name="Testing API")
+    @allure.tag("API", "REGRESS")
+    @allure.label("layer", "api")
+    @allure.severity(Severity.CRITICAL)
     @allure.title("Удаление пользователя.")
     def test_verify_response_message(self, api_application, create_user):
         with allure.step("Создать пользователя через API"):

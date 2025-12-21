@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from selene import browser
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+
 from pages.authorization_page import AuthorizationPage
 from pages.inventory_page import InventoryPage
 

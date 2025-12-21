@@ -7,15 +7,15 @@ from automation_exercise.utils.schemas import MESSAGE_ONLY_SCHEMA
 from automation_exercise.utils.static_values import StatusMessage
 
 
+@allure.epic("API")
+@allure.feature("Post")
+@allure.story("Login to account")
 class TestVerifyLogin(BaseTestRequests):
 
-    @allure.id("02_POST_REQUEST")
-    @allure.tag("API", "POST")
-    @allure.severity(Severity.NORMAL)
-    @allure.parent_suite("API")
-    @allure.suite("POST")
-    @allure.link("https://www.automationexercise.com", name="Testing API")
-    @allure.title("Создать пользователя.")
+    @allure.tag("API", "REGRESS")
+    @allure.label("layer", "api")
+    @allure.severity(Severity.CRITICAL)
+    @allure.title("Проверка авторизации.")
     def test_valid_status_code(self, api_application, create_user):
         with allure.step("Создать пользователя через API"):
             api_application.post.create_account(create_user)

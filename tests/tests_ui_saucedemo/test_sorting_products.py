@@ -1,10 +1,5 @@
-import os
-
 import allure
 from allure_commons.types import Severity
-
-from pages.authorization_page import AuthorizationPage
-from pages.inventory_page import InventoryPage
 
 
 @allure.epic("UI")
@@ -36,4 +31,3 @@ class TestCatalogSorting:
         inventory.select_sort_option("hilo")
         actual_hilo = inventory.get_product_prices()
         assert actual_hilo == sorted(actual_hilo, reverse=True)
-

@@ -7,14 +7,14 @@ from automation_exercise.utils.schemas import MESSAGE_ONLY_SCHEMA
 from automation_exercise.utils.static_values import StatusMessage
 
 
+@allure.epic("API")
+@allure.feature("put")
+@allure.story("Update account")
 class TestUpdateUserAccount(BaseTestRequests):
 
-    @allure.id("03_PUT_REQUEST")
-    @allure.tag("API", "PUT")
-    @allure.severity(Severity.NORMAL)
-    @allure.parent_suite("API")
-    @allure.suite("PUT")
-    @allure.link("https://www.automationexercise.com", name="Testing API")
+    @allure.tag("API", "REGRESS")
+    @allure.label("layer", "api")
+    @allure.severity(Severity.CRITICAL)
     @allure.title("Обновление аккаунта пользователя.")
     def test_verify_response_message(self, api_application, create_user_account, update_user_params):
         with allure.step("Выполнить PUT-запрос на обновление аккаунта пользователя"):

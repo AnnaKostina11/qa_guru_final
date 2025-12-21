@@ -11,7 +11,7 @@ class DeleteAPI:
     def delete_account(self, email: str, password: str) -> dict:
         data = {"email": email, "password": password}
 
-        #Схемы для request
+        # Схемы для request
         validate(instance=data, schema=DELETE_ACCOUNT_REQUEST_SCHEMA)
 
         return self.client.request("DELETE", "/deleteAccount", data=data)

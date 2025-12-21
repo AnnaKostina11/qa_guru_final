@@ -32,7 +32,7 @@ class PostAPI:
             "mobile_number": user.mobile_number,
         }
 
-        #Схемы для request
+        # Схемы для request
         validate(instance=data, schema=CREATE_ACCOUNT_REQUEST_SCHEMA)
 
         return self.client.request("POST", "/createAccount", data=data)
@@ -40,7 +40,7 @@ class PostAPI:
     def verify_login(self, user) -> dict:
         data = {"email": user.email, "password": user.password}
 
-        #Схемы для request
+        # Схемы для request
         validate(instance=data, schema=VERIFY_LOGIN_REQUEST_SCHEMA)
 
         return self.client.request("POST", "/verifyLogin", data=data)
