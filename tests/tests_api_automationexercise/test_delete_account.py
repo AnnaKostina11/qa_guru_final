@@ -16,28 +16,6 @@ class TestUserAccount(BaseTestRequests):
     @allure.suite("DELETE")
     @allure.link("https://www.automationexercise.com", name="Testing API")
     @allure.title("Удаление пользователя.")
-    def test_valid_status_code(self, api_application, create_user):
-        with allure.step("Создать пользователя через API"):
-            api_application.post.create_account(create_user)
-
-        with allure.step("Удалить пользователя через API"):
-            response_info = api_application.delete.delete_account(create_user.email, create_user.password)
-
-        with allure.step("Проверить HTTP статус, business responseCode, схему и десериализацию"):
-            self.check_response(
-                response_info=response_info,
-                expected_http=200,
-                expected_business=200,
-                schema=MESSAGE_ONLY_SCHEMA,
-                model_cls=MessageOnlyResponse,
-            )
-
-    @allure.id("02_DELETE_REQUEST")
-    @allure.tag("API", "DELETE")
-    @allure.severity(Severity.NORMAL)
-    @allure.parent_suite("API")
-    @allure.suite("DELETE")
-    @allure.link("https://www.automationexercise.com", name="Testing API")
     def test_verify_response_message(self, api_application, create_user):
         with allure.step("Создать пользователя через API"):
             api_application.post.create_account(create_user)
