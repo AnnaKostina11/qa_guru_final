@@ -49,31 +49,31 @@ def api_application(api_base_url):
 @pytest.fixture(scope="function")
 def create_user():
     user = User(
-        nick_name="Testovich",
-        email="testov2_qaguru@test.com",
-        password="Qwe123",
-        company_name="Trevor Corporation",
-        country=Country.india.value,
-        first_name="Trevor",
-        last_name="Laxtin",
+        nick_name="Trigive",
+        email="SomogyiAlbert@jourrapide.com",
+        password="Tud6shi0s",
+        company_name="Grossman's",
+        country=Country.Hungary.value,
+        first_name="Albert",
+        last_name="Somogyi",
         gender="male",
         day="10",
         month=Months.may.value[0],
-        year="2000",
-        city="Bangladesh",
-        state="Salavalas",
-        first_address="Shampte 32 str., appartment 33",
-        second_address="Helentors 5 str., apartment 44",
-        zipcode="2331144",
-        mobile_number="34534222323",
+        year="1972",
+        city="Fertôd",
+        state="Nyugat-Dunántúl",
+        first_address="Wesselényi u. 38.",
+        second_address="Wesselényi u. 38.",
+        zipcode="9433",
+        mobile_number="899116581",
     )
 
     user_card = UserCard(
         name=f"{user.first_name.upper()} {user.last_name}",
-        number="5677654433225566",
-        cvc="111",
-        expiration_month="02",
-        expiration_year="2030",
+        number="4539862908251239",
+        cvc="916",
+        expiration_month="09",
+        expiration_year="2026",
     )
 
     user.add_card(user_card)

@@ -3,7 +3,7 @@ from enum import Enum
 
 class Country(Enum):
     # Значения справочников, которые используются в моделях/фикстурах
-    india = "India"
+    Hungary = "Hungary"
 
 
 class Months(Enum):
