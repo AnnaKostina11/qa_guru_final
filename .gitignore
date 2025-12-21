@@ -3,9 +3,8 @@ venv/
 .idea/
 .env
 *.pyc
-*/allure-results/
-tests/test_API/allure-results/
+allure-results/*
 notifications/
-allure-report/
+allure-report/*
 
 

@@ -14,6 +14,7 @@ class TestAllBrands(BaseTestRequests):
     @allure.parent_suite("API")
     @allure.suite("GET")
     @allure.link("https://www.automationexercise.com", name="Testing API")
+    @allure.title("Получение списка брендов.")
     def test_valid_status_code(self, api_application):
         with allure.step("Отправить GET-запрос на получение списка брендов"):
             response_info = api_application.get.all_brand_list()

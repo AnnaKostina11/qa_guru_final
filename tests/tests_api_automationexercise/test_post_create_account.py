@@ -15,6 +15,7 @@ class TestCreateAccount(BaseTestRequests):
     @allure.parent_suite("API")
     @allure.suite("POST")
     @allure.link("https://www.automationexercise.com", name="Testing API")
+    @allure.title("Создать аккаунт.")
     def test_successful_account_creation(self, api_application, create_user):
         with allure.step("Создать аккаунт через API"):
             response_info = api_application.post.create_account(create_user)

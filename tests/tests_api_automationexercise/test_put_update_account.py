@@ -15,6 +15,7 @@ class TestUpdateUserAccount(BaseTestRequests):
     @allure.parent_suite("API")
     @allure.suite("PUT")
     @allure.link("https://www.automationexercise.com", name="Testing API")
+    @allure.title("Обновление аккаунта пользователя.")
     def test_verify_response_message(self, api_application, create_user_account, update_user_params):
         with allure.step("Выполнить PUT-запрос на обновление аккаунта пользователя"):
             response_info = api_application.put.update_user_account(update_user_params)

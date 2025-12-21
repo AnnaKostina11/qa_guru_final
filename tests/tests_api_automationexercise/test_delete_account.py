@@ -15,6 +15,7 @@ class TestUserAccount(BaseTestRequests):
     @allure.parent_suite("API")
     @allure.suite("DELETE")
     @allure.link("https://www.automationexercise.com", name="Testing API")
+    @allure.title("Удаление пользователя.")
     def test_valid_status_code(self, api_application, create_user):
         with allure.step("Создать пользователя через API"):
             api_application.post.create_account(create_user)
