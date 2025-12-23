@@ -101,8 +101,8 @@ SAUCEDEMO_PASSWORD=***
         "enableChart": true
       },
       "telegram": {
-        "token": "8582183300:AAEgYztF2cHX4I05WHb4XG6T4dLBGOB3tpE",
-        "chat": "-1003298690377",
+        "token": "***",
+        "chat": "-***",
         "replyTo": ""
       }
     }
