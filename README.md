@@ -72,7 +72,7 @@ SAUCEDEMO_PASSWORD=***
       - `Launch name` Установить значение `${JOB_NAME} - #${BUILD_NUMBER}`
       - `Results` заполнить "allure-results"
 - Вкладка Build Steps
-   - Создать текстовый файл с именем ".env", заполнить, установить чек-бокс "Overwrite file" и "Create at Workspace":
+   - Создать текстовый файл с именем ".env", установить чек-бокс "Overwrite file" и "Create at Workspace", заполнить:
     ```
     # Ссылка на ресурс для апи-тестирования
     AUTOMATIONEXERCISE_API_URL=https://www.automationexercise.com/api 
@@ -88,7 +88,7 @@ SAUCEDEMO_PASSWORD=***
     SAUCEDEMO_LOGIN_FAIL=***
     SAUCEDEMO_PASSWORD=***
     ```
-   - Создать текстовый файл с именем "notifications/config.json", заполнить, установить чек-бокс "Overwrite file" и "Create at Workspace":
+   - Создать текстовый файл с именем "notifications/config.json", установить чек-бокс "Overwrite file" и "Create at Workspace", заполнить:
    ```
     {
       "base": {
