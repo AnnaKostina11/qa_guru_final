@@ -51,6 +51,7 @@ SAUCEDEMO_LOGIN=***
 SAUCEDEMO_LOGIN_FAIL=***
 SAUCEDEMO_PASSWORD=***
 ```
+Далее необходимо открыть консоль (сочетание клавиш alt+F12) и выполнить следующие шаги:
 - Установить зависимости: `pip install -r requirements.txt`
 - Запуск всех тестов: `pytest`
 - Запуск только UI: `pytest tests/tests_UI_saucedemo`
